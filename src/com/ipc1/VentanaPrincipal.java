@@ -8,6 +8,7 @@ import java.awt.*;
 public class VentanaPrincipal extends JFrame {
 
     private DibujarTablero tablero;
+
     public VentanaPrincipal() {
         this.setSize(500,500);
         this.setResizable(false);
@@ -27,6 +28,7 @@ public class VentanaPrincipal extends JFrame {
         this.setLayout(new BorderLayout());
         this.add(tablero, BorderLayout.CENTER);
     }
+
 
 
 
