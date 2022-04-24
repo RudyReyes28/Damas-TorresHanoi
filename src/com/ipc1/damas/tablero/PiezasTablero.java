@@ -1,4 +1,4 @@
-package com.ipc1.tablero;
+package com.ipc1.damas.tablero;
 
 import javax.swing.*;
 

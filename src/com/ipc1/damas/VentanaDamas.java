@@ -1,15 +1,15 @@
-package com.ipc1;
+package com.ipc1.damas;
 
-import com.ipc1.tablero.DibujarTablero;
+import com.ipc1.damas.tablero.DibujarTablero;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class VentanaPrincipal extends JFrame {
+public class VentanaDamas extends JFrame {
 
     private DibujarTablero tablero;
 
-    public VentanaPrincipal() {
+    public VentanaDamas() {
         this.setSize(500,500);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
