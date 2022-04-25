@@ -1,5 +1,8 @@
 package com.ipc1.damas.tablero;
 
+import com.ipc1.Utilidades.Cronometro;
+import com.ipc1.damas.VentanaDamas;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,15 +10,20 @@ import java.awt.event.ActionListener;
 
 public class DibujarTablero extends JPanel implements ActionListener {
 
+    private Cronometro cronometro;
+    private Thread hiloTiempo;
     private JButton [][] botonesTablero;
     private PiezasTablero damas;
     private int xInicial=0,yInicial=0, cambio;
+    private VentanaDamas ventana;
 
 
-    public DibujarTablero() {
+    public DibujarTablero(VentanaDamas ventana) {
+        this.ventana = ventana;
         iniciar();
 
-        setLayout(new BorderLayout());
+        //setLayout(new BorderLayout());
+        this.setBounds(0,0,500,500);
         this.setVisible(true);
         aniadirBotones();
         dibujarTablero();
@@ -23,8 +31,9 @@ public class DibujarTablero extends JPanel implements ActionListener {
     }
     public void iniciar(){
         botonesTablero = new JButton[8][8];
-        damas = new PiezasTablero();
+        damas = new PiezasTablero(this);
         damas.llenarTablero();
+
 
         for(int i=0; i<botonesTablero.length;i++){
             for(int j=0; j<botonesTablero[0].length; j++){
@@ -38,7 +47,10 @@ public class DibujarTablero extends JPanel implements ActionListener {
     }
 
     public void dibujarTablero(){
+        cronometro = new Cronometro(ventana.getTiempo());
+        hiloTiempo = new Thread(cronometro);
 
+        hiloTiempo.start();
         for(int i=0; i<botonesTablero.length; i++){
             for(int j=0; j<botonesTablero[0].length;j++){
                 if(damas.getPieza(i,j)== damas.getBlancas()){
@@ -74,6 +86,8 @@ public class DibujarTablero extends JPanel implements ActionListener {
             }
         }else{
             damas.llenarTablero();
+            hiloTiempo.interrupt();
+            ventana.reiniciarContadores();
             dibujarTablero();
         }
     }
@@ -89,6 +103,7 @@ public class DibujarTablero extends JPanel implements ActionListener {
 
     }
 
+    //TURNO TRUE = JUGADOR 1, TURNO FALSE = JUGADOR 2
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -114,5 +129,17 @@ public class DibujarTablero extends JPanel implements ActionListener {
                 }
             }
         }
+    }
+
+    public void contadorPiezas(){
+        if(damas.isTurno()){
+            ventana.setContadorPiezas1(1);
+        }else{
+            ventana.setContadorPiezas2(1);
+        }
+    }
+
+    public Thread getHiloTiempo(){
+        return hiloTiempo;
     }
 }

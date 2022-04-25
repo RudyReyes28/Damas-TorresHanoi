@@ -132,7 +132,7 @@ public class VentanaInicioDamas extends JFrame {
         ActionListener eventoEmpezarPartida = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VentanaDamas damas = new VentanaDamas();
+                VentanaDamas damas = new VentanaDamas(jugador1,jugador2);
                 damas.setVisible(true);
                 dispose();
             }

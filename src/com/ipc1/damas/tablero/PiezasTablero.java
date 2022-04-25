@@ -4,12 +4,14 @@ import javax.swing.*;
 
 public class PiezasTablero {
 
+    private DibujarTablero dibujarTablero;
     private int piezasTablero[][];
     private final int rojas = 1, blancas =2, rojasR=3, blancasR = 4, vacio=5;
 
     private boolean turno = true;//True = turno rojos, false = turno blancos
 
-    public PiezasTablero() {
+    public PiezasTablero(DibujarTablero dibujarTablero) {
+        this.dibujarTablero = dibujarTablero;
         this.piezasTablero = new int[8][8];
     }
 
@@ -177,6 +179,7 @@ public class PiezasTablero {
                 if(xInicial-i>=xFinal) {
                     if (piezasTablero[xInicial - i][yInicial - i] == enemiga || piezasTablero[xInicial - i][yInicial - i] == enemigaR) {
                         piezasTablero[xInicial - i][yInicial - i] = vacio;
+                        dibujarTablero.contadorPiezas();
                         break;
                     }
                 }
@@ -184,6 +187,7 @@ public class PiezasTablero {
                 if(xInicial-i>=xFinal) {
                     if (piezasTablero[xInicial - i][yInicial + i] == enemiga || piezasTablero[xInicial - i][yInicial + i] == enemigaR) {
                         piezasTablero[xInicial - i][yInicial + i] = vacio;
+                        dibujarTablero.contadorPiezas();
                         break;
                     }
                 }
@@ -197,6 +201,7 @@ public class PiezasTablero {
                 if(xInicial+i<=xFinal) {
                     if (piezasTablero[xInicial + i][yInicial - i] == enemiga || piezasTablero[xInicial + i][yInicial - i] == enemigaR) {
                         piezasTablero[xInicial + i][yInicial - i] = vacio;
+                        dibujarTablero.contadorPiezas();
                         break;
                     }
                 }
@@ -204,6 +209,7 @@ public class PiezasTablero {
                 if(xInicial+i<=xFinal) {
                     if (piezasTablero[xInicial + i][yInicial + i] == enemiga || piezasTablero[xInicial + i][yInicial + i] == enemigaR) {
                         piezasTablero[xInicial + i][yInicial + i] = vacio;
+                        dibujarTablero.contadorPiezas();
                         break;
                     }
                 }
@@ -217,6 +223,7 @@ public class PiezasTablero {
             if (piezasTablero[xInicial - 1][yInicial - 1] == blancas || piezasTablero[xInicial - 1][yInicial - 1] == blancasR) {
                 piezasTablero[xInicial - 1][yInicial - 1] = vacio;
                 completado = true;
+                dibujarTablero.contadorPiezas();
             }
         } catch (ArrayIndexOutOfBoundsException e){
 
@@ -225,6 +232,7 @@ public class PiezasTablero {
             if(!completado){
                 if(piezasTablero[xInicial-1][yInicial+1]==blancas|| piezasTablero[xInicial-1][yInicial+1]==blancasR){
                     piezasTablero[xInicial-1][yInicial+1]=vacio;
+                    dibujarTablero.contadorPiezas();
                 }
             }
         }catch (ArrayIndexOutOfBoundsException ignore){
@@ -238,6 +246,7 @@ public class PiezasTablero {
             if (piezasTablero[xInicial + 1][yInicial - 1] == rojas || piezasTablero[xInicial + 1][yInicial - 1] == rojasR) {
                 piezasTablero[xInicial + 1][yInicial - 1] = vacio;
                 completado = true;
+                dibujarTablero.contadorPiezas();
             }
         }catch (ArrayIndexOutOfBoundsException e){
 
@@ -246,6 +255,7 @@ public class PiezasTablero {
             if(!completado){
                 if(piezasTablero[xInicial+1][yInicial+1]==rojas|| piezasTablero[xInicial+1][yInicial+1]==rojasR){
                     piezasTablero[xInicial+1][yInicial+1]=vacio;
+                    dibujarTablero.contadorPiezas();
                 }
             }
         }catch (ArrayIndexOutOfBoundsException ignore){
