@@ -8,15 +8,15 @@ import com.ipc1.ventanas.VentanaReporteDamas;
 public class Jugar {
 
     public static void main(String[] args) {
-        VentanaDamas ventana = new VentanaDamas("Rudy","Juan");
-        ventana.setVisible(true);
+        //VentanaDamas ventana = new VentanaDamas("Rudy","Juan",1);
+        //ventana.setVisible(true);
 
         //VentanaHanoi hanoi = new VentanaHanoi();
         //hanoi.setVisible(true);
 
         //VentanaInicio inicio = new VentanaInicio();
-        //VentanaInicioDamas inicioDamas = new VentanaInicioDamas();
-        //inicioDamas.setVisible(true);
+        VentanaInicioDamas inicioDamas = new VentanaInicioDamas();
+        inicioDamas.setVisible(true);
 
         //VentanaReporteDamas reportes = new VentanaReporteDamas();
     }

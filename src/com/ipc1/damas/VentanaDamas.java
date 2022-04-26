@@ -17,11 +17,13 @@ public class VentanaDamas extends JFrame {
     private String nombreJugador1, nombreJugador2;
     private int contadorPiezas1, contadorPiezas2;
     private JMenuItem guardarPartida, regresarPrincipal;
+    private int modoJuego;
 
 
-    public VentanaDamas(String nombreJugador1, String nombreJugador2) {
+    public VentanaDamas(String nombreJugador1, String nombreJugador2, int modoJuego) {
         this.nombreJugador1=nombreJugador1;
         this.nombreJugador2=nombreJugador2;
+        this.modoJuego = modoJuego;
         this.setSize(700,556);
         //this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -40,7 +42,7 @@ public class VentanaDamas extends JFrame {
     }
 
     public void iniciarJuego(){
-        tablero = new DibujarTablero(this);
+        tablero = new DibujarTablero(this, modoJuego);
 
     }
 

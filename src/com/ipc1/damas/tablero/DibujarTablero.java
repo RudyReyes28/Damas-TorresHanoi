@@ -16,10 +16,12 @@ public class DibujarTablero extends JPanel implements ActionListener {
     private PiezasTablero damas;
     private int xInicial=0,yInicial=0, cambio;
     private VentanaDamas ventana;
+    private int modo;  //1 versus //2 computadora
 
 
-    public DibujarTablero(VentanaDamas ventana) {
+    public DibujarTablero(VentanaDamas ventana, int modo) {
         this.ventana = ventana;
+        this.modo = modo;
         iniciar();
 
         //setLayout(new BorderLayout());
@@ -112,23 +114,68 @@ public class DibujarTablero extends JPanel implements ActionListener {
 
                 if(e.getSource() == botonesTablero[i][j]){
 
-                    if(damas.verificarFicha(damas.isTurno(),i,j)){
-                        xInicial = i;
-                        yInicial = j;
-                        cambio=1;
-                    } else if (cambio==1) {
-                        if(damas.moverFicha(damas.isTurno(),xInicial,yInicial,i,j)){
-                            moverFichas();
-                            damas.cambiarTurno();
-                        }else{
-                            JOptionPane.showMessageDialog(null,"MOVIMIENTO INVALIDO");
-                        }
+                    if(modo==1) {
+                        if (damas.verificarFicha(damas.isTurno(), i, j)) {
+                            xInicial = i;
+                            yInicial = j;
+                            cambio = 1;
+                        } else if (cambio == 1) {
+                            if (damas.moverFicha(damas.isTurno(), xInicial, yInicial, i, j)) {
+                                moverFichas();
+                                damas.cambiarTurno();
+                            } else {
+                                JOptionPane.showMessageDialog(null, "MOVIMIENTO INVALIDO");
+                            }
 
-                        cambio=0;
+                            cambio = 0;
+                        }
+                    }else if(modo ==2){
+                        modoComputadora(i,j);
                     }
                 }
             }
         }
+    }
+
+    public void modoComputadora(int i, int j){
+        //es turno del jugador
+        if(damas.isTurno()){
+            if (damas.verificarFicha(damas.isTurno(), i, j)) {
+                xInicial = i;
+                yInicial = j;
+                cambio = 1;
+            } else if (cambio == 1) {
+                if (damas.moverFicha(damas.isTurno(), xInicial, yInicial, i, j)) {
+                    moverFichas();
+                    damas.cambiarTurno();
+                } else {
+                    JOptionPane.showMessageDialog(null, "MOVIMIENTO INVALIDO");
+                }
+
+                cambio = 0;
+            }
+        }else{
+            while(!movimientoBot()){
+
+            }
+            damas.cambiarTurno();
+        }
+
+    }
+
+    public boolean movimientoBot(){
+        boolean repetir = false;
+        int x = (int) (Math.random()*8);
+        int y = (int) (Math.random()*8);
+        int xFinal = (int) (Math.random()*8);
+        int yFinal = (int) (Math.random()*8);
+
+        if(damas.moverFicha(damas.isTurno(),x,y,xFinal,yFinal)){
+            moverFichas();
+            return true;
+        }
+
+        return repetir;
     }
 
     public void contadorPiezas(){

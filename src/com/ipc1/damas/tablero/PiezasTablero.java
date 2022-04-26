@@ -183,7 +183,7 @@ public class PiezasTablero {
         for (int i = 1; i < piezasTablero.length; i++) {
             if (xInicial - i >= 0 && yInicial - i >= 0) {
                 if ((xInicial - i == xFinal) && (yInicial -i )== yFinal) {
-                    for(int j=1; j<=(yInicial); j++) {
+                    for(int j=1; j<=(yInicial-yFinal); j++) {
                         if (piezasTablero[xInicial - j][yInicial - j] == enemiga || piezasTablero[xInicial - j][yInicial - j] == enemigaR) {
                             piezasTablero[xInicial - j][yInicial - j] = vacio;
                             dibujarTablero.contadorPiezas();
@@ -211,7 +211,7 @@ public class PiezasTablero {
         for (int i = 1; i < piezasTablero.length; i++) {
             if (xInicial + i <= 7 && yInicial - i >= 0) {
                 if ((xInicial + i == xFinal) && (yInicial -i )== yFinal) {
-                    for(int j=1; j<=(yInicial); j++) {
+                    for(int j=1; j<=(yInicial-yFinal); j++) {
                         if (piezasTablero[xInicial + j][yInicial - j] == enemiga || piezasTablero[xInicial + j][yInicial - j] == enemigaR) {
                             piezasTablero[xInicial + j][yInicial - j] = vacio;
                             dibujarTablero.contadorPiezas();
