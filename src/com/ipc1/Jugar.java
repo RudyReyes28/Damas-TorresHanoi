@@ -3,6 +3,7 @@ package com.ipc1;
 import com.ipc1.damas.VentanaDamas;
 import com.ipc1.torres_hanoi.VentanaHanoi;
 import com.ipc1.ventanas.VentanaInicioDamas;
+import com.ipc1.ventanas.VentanaReporteDamas;
 
 public class Jugar {
 
@@ -16,5 +17,7 @@ public class Jugar {
         //VentanaInicio inicio = new VentanaInicio();
         //VentanaInicioDamas inicioDamas = new VentanaInicioDamas();
         //inicioDamas.setVisible(true);
+
+        //VentanaReporteDamas reportes = new VentanaReporteDamas();
     }
 }

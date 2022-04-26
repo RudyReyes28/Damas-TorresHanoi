@@ -22,7 +22,7 @@ public class VentanaDamas extends JFrame {
     public VentanaDamas(String nombreJugador1, String nombreJugador2) {
         this.nombreJugador1=nombreJugador1;
         this.nombreJugador2=nombreJugador2;
-        this.setSize(700,554);
+        this.setSize(700,556);
         //this.setResizable(false);
         this.setLocationRelativeTo(null);
 
@@ -83,37 +83,37 @@ public class VentanaDamas extends JFrame {
         tiempo.setForeground(Color.BLACK);
         tiempo.setFont(new Font("Arial",Font.BOLD,15));
 
-        JLabel jugador1 = new JLabel();
-        jugador1.setBounds(5, 160,210,30);
-        jugador1.setText("Piezas comidas "+nombreJugador1);
-        jugador1.setHorizontalAlignment(SwingConstants.LEFT);
-        jugador1.setForeground(Color.BLACK);
-        jugador1.setFont(new Font("Arial",Font.BOLD,15));
-
-        piezasJugador1 = new JLabel();
-        piezasJugador1.setBounds(50, 185,50,30);
-        piezasJugador1.setOpaque(true);
-        piezasJugador1.setBackground(Color.white);
-        piezasJugador1.setText("0");
-        piezasJugador1.setHorizontalAlignment(SwingConstants.CENTER);
-        piezasJugador1.setForeground(Color.BLACK);
-        piezasJugador1.setFont(new Font("Arial",Font.BOLD,15));
-
         JLabel jugador2 = new JLabel();
-        jugador2.setBounds(5, 250,210,30);
+        jugador2.setBounds(5, 160,210,30);
         jugador2.setText("Piezas comidas "+nombreJugador2);
         jugador2.setHorizontalAlignment(SwingConstants.LEFT);
         jugador2.setForeground(Color.BLACK);
         jugador2.setFont(new Font("Arial",Font.BOLD,15));
 
         piezasJugador2 = new JLabel();
-        piezasJugador2.setBounds(50, 275,50,30);
+        piezasJugador2.setBounds(50, 185,50,30);
         piezasJugador2.setOpaque(true);
         piezasJugador2.setBackground(Color.white);
         piezasJugador2.setText("0");
         piezasJugador2.setHorizontalAlignment(SwingConstants.CENTER);
         piezasJugador2.setForeground(Color.BLACK);
         piezasJugador2.setFont(new Font("Arial",Font.BOLD,15));
+
+        JLabel jugador1 = new JLabel();
+        jugador1.setBounds(5, 250,210,30);
+        jugador1.setText("Piezas comidas "+nombreJugador1);
+        jugador1.setHorizontalAlignment(SwingConstants.LEFT);
+        jugador1.setForeground(Color.BLACK);
+        jugador1.setFont(new Font("Arial",Font.BOLD,15));
+
+        piezasJugador1 = new JLabel();
+        piezasJugador1.setBounds(50, 275,50,30);
+        piezasJugador1.setOpaque(true);
+        piezasJugador1.setBackground(Color.white);
+        piezasJugador1.setText("0");
+        piezasJugador1.setHorizontalAlignment(SwingConstants.CENTER);
+        piezasJugador1.setForeground(Color.BLACK);
+        piezasJugador1.setFont(new Font("Arial",Font.BOLD,15));
 
         panelOpciones.add(etiquetaTitulo);
         panelOpciones.add(etiquetaTiempo);

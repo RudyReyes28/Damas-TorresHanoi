@@ -6,7 +6,7 @@ public class PiezasTablero {
 
     private DibujarTablero dibujarTablero;
     private int piezasTablero[][];
-    private final int rojas = 1, blancas =2, rojasR=3, blancasR = 4, vacio=5;
+    private final int rojas = 1, blancas = 2, rojasR = 3, blancasR = 4, vacio = 5;
 
     private boolean turno = true;//True = turno rojos, false = turno blancos
 
@@ -15,23 +15,23 @@ public class PiezasTablero {
         this.piezasTablero = new int[8][8];
     }
 
-    public void cambiarTurno(){
-        if(turno){
-            turno=false;
-        }else{
+    public void cambiarTurno() {
+        if (turno) {
+            turno = false;
+        } else {
             turno = true;
         }
 
     }
 
-    public boolean verificarFicha(boolean turno, int x, int y){
+    public boolean verificarFicha(boolean turno, int x, int y) {
         boolean seleccionFicha = false;
-        if(turno){
-            if(piezasTablero[x][y] == rojas || piezasTablero[x][y] == rojasR){
+        if (turno) {
+            if (piezasTablero[x][y] == rojas || piezasTablero[x][y] == rojasR) {
                 seleccionFicha = true;
             }
-        }else{
-            if(piezasTablero[x][y] == blancas || piezasTablero[x][y] == blancasR){
+        } else {
+            if (piezasTablero[x][y] == blancas || piezasTablero[x][y] == blancasR) {
                 seleccionFicha = true;
             }
         }
@@ -39,20 +39,20 @@ public class PiezasTablero {
         return seleccionFicha;
     }
 
-    public void verificarRey(){
-        for(int i=0; i<piezasTablero[0].length;i++){
-            if(piezasTablero[0][i]==rojas){
+    public void verificarRey() {
+        for (int i = 0; i < piezasTablero[0].length; i++) {
+            if (piezasTablero[0][i] == rojas) {
                 piezasTablero[0][i] = rojasR;
-            }else if (piezasTablero[7][i] == blancas) {
+            } else if (piezasTablero[7][i] == blancas) {
                 piezasTablero[7][i] = blancasR;
             }
         }
     }
 
-    public boolean moverFicha(boolean turno, int xInicial, int yInicial, int xFinal, int yFinal){
-        boolean movimientoCorrecto= false;
+    public boolean moverFicha(boolean turno, int xInicial, int yInicial, int xFinal, int yFinal) {
+        boolean movimientoCorrecto = false;
 
-        if(turno) {
+        if (turno) {
             //TURNO DE LAS ROJAS
             if (piezasTablero[xInicial][yInicial] == rojas) {
                 if ((xInicial - 1) == xFinal && ((yInicial - 1) == yFinal || (yInicial + 1) == yFinal)) {
@@ -63,92 +63,96 @@ public class PiezasTablero {
                     }
                 } else if ((xInicial - 2) == xFinal && ((yInicial - 2) == yFinal || (yInicial + 2) == yFinal)) {
 
-                    try {
+                    //try {
+                    if ((yInicial - 2) == yFinal) {
                         if (piezasTablero[xInicial - 1][yInicial - 1] == blancas || piezasTablero[xInicial - 1][yInicial - 1] == blancasR) {
                             movimientoCorrecto = movimientoPiezasBR(xInicial, yInicial, xFinal, yFinal, 2, rojas);
                         }
-                    }catch (ArrayIndexOutOfBoundsException ignore){
-
                     }
+                    //}catch (ArrayIndexOutOfBoundsException ignore){
 
-                    try {
-                        if(!movimientoCorrecto){
-                            if (piezasTablero[xInicial - 1][yInicial + 1] == blancas || piezasTablero[xInicial - 1][yInicial + 1] == blancasR) {
-                                movimientoCorrecto = movimientoPiezasBR(xInicial, yInicial, xFinal, yFinal, 2, rojas);
-                            }
+                    //}
+
+                    //try {
+                    else if (yInicial + 2 == yFinal) {
+                        if (piezasTablero[xInicial - 1][yInicial + 1] == blancas || piezasTablero[xInicial - 1][yInicial + 1] == blancasR) {
+                            movimientoCorrecto = movimientoPiezasBR(xInicial, yInicial, xFinal, yFinal, 2, rojas);
                         }
-                    }catch (ArrayIndexOutOfBoundsException ignore){
-
                     }
+                    //} catch (ArrayIndexOutOfBoundsException ignore) {
+
+                    //}
                 }
-            }else if(piezasTablero[xInicial][yInicial] == rojasR){
-                movimientoCorrecto = movimientoReina(xInicial,yInicial,xFinal,yFinal, rojasR, blancas, blancasR);
+            } else if (piezasTablero[xInicial][yInicial] == rojasR) {
+                movimientoCorrecto = movimientoReina(xInicial, yInicial, xFinal, yFinal, rojasR, blancas, blancasR);
             }
-        }else {
+        } else {
             //TURNO DE LAS BLANCAS
             if (piezasTablero[xInicial][yInicial] == blancas) {
-                if((xInicial+1)==xFinal && ((yInicial-1)==yFinal || (yInicial+1)==yFinal)){
-                    if(piezasTablero[xFinal][yFinal] == vacio){
-                        piezasTablero[xInicial][yInicial]= vacio;
-                        piezasTablero[xFinal][yFinal]= blancas;
-                        movimientoCorrecto= true;
+                if ((xInicial + 1) == xFinal && ((yInicial - 1) == yFinal || (yInicial + 1) == yFinal)) {
+                    if (piezasTablero[xFinal][yFinal] == vacio) {
+                        piezasTablero[xInicial][yInicial] = vacio;
+                        piezasTablero[xFinal][yFinal] = blancas;
+                        movimientoCorrecto = true;
                     }
                 } else if ((xInicial + 2) == xFinal && ((yInicial - 2) == yFinal || (yInicial + 2) == yFinal)) {
 
-                    try {
+                    //try {
+                    if(yInicial-2==yFinal) {
                         if (piezasTablero[xInicial + 1][yInicial - 1] == rojas || piezasTablero[xInicial + 1][yInicial - 1] == rojasR) {
-                            movimientoCorrecto = movimientoPiezasBR(xInicial, yInicial, xFinal, yFinal,1,blancas);
+                            movimientoCorrecto = movimientoPiezasBR(xInicial, yInicial, xFinal, yFinal, 1, blancas);
                         }
-                    }catch (ArrayIndexOutOfBoundsException ignore){
-
                     }
-                    try {
-                        if (!movimientoCorrecto) {
-                            if (piezasTablero[xInicial + 1][yInicial + 1] == rojas || piezasTablero[xInicial + 1][yInicial + 1] == rojasR) {
-                                movimientoCorrecto = movimientoPiezasBR(xInicial, yInicial, xFinal, yFinal, 1, blancas);
-                            }
+                    //} catch (ArrayIndexOutOfBoundsException ignore) {
+
+                    //}
+                    //try {
+                    else if (yInicial+2 == yFinal) {
+                        if (piezasTablero[xInicial + 1][yInicial + 1] == rojas || piezasTablero[xInicial + 1][yInicial + 1] == rojasR) {
+                            movimientoCorrecto = movimientoPiezasBR(xInicial, yInicial, xFinal, yFinal, 1, blancas);
                         }
-                    }catch (ArrayIndexOutOfBoundsException ignore){
-
                     }
+                    //} catch (ArrayIndexOutOfBoundsException ignore) {
+
+                    //}
 
                 }
-            }else if(piezasTablero[xInicial][yInicial] == blancasR){
-                movimientoCorrecto = movimientoReina(xInicial,yInicial,xFinal,yFinal, blancasR, rojas,rojasR);
+            } else if (piezasTablero[xInicial][yInicial] == blancasR) {
+                movimientoCorrecto = movimientoReina(xInicial, yInicial, xFinal, yFinal, blancasR, rojas, rojasR);
             }
         }
 
         return movimientoCorrecto;
     }
 
-    private boolean movimientoPiezasBR(int xInicial, int yInicial, int xFinal, int yFinal, int opcionMetodo, int colorPieza){
+    private boolean movimientoPiezasBR(int xInicial, int yInicial, int xFinal, int yFinal, int opcionMetodo, int colorPieza) {
         boolean movimientoCorrecto = false;
 
         if (piezasTablero[xFinal][yFinal] == vacio) {
 
             piezasTablero[xInicial][yInicial] = vacio;
-            if(opcionMetodo==1) {
-                eliminarFichasRojas(xInicial, yInicial);
-            }else{
-                eliminarFichasBlancas(xInicial,yInicial);
+            if (opcionMetodo == 1) {
+                eliminarFichasRojas(xInicial, yInicial, yFinal);
+            } else {
+                eliminarFichasBlancas(xInicial, yInicial, yFinal);
             }
             piezasTablero[xFinal][yFinal] = colorPieza;
             movimientoCorrecto = true;
         }
 
-        return  movimientoCorrecto;
+        return movimientoCorrecto;
     }
 
-    private boolean movimientoReina(int xInicial, int yInicial, int xFinal, int yFinal, int colorPieza, int piezaEnemiga, int piezaReyEnemiga){
+    private boolean movimientoReina(int xInicial, int yInicial, int xFinal, int yFinal, int colorPieza, int piezaEnemiga, int piezaReyEnemiga) {
         boolean movimientoCorrecto = false;
 
-        if(xInicial>xFinal){
+        if (xInicial > xFinal) {
             //VA DE ABAJO HACIA ARRIBA
 
-            for(int i=1;i<piezasTablero.length;i++){
-                if((xInicial-i)==xFinal && ((yInicial - i) == yFinal) || (xInicial-i)==xFinal && ((yInicial + i) == yFinal)){
-                    if(piezasTablero[xFinal][yFinal]== vacio){
-                        eliminarFichasReinasAbajoArriba(xInicial,yInicial,xFinal,piezaEnemiga,piezaReyEnemiga);
+            for (int i = 1; i < piezasTablero.length; i++) {
+                if ((xInicial - i) == xFinal && ((yInicial - i) == yFinal) || (xInicial - i) == xFinal && ((yInicial + i) == yFinal)) {
+                    if (piezasTablero[xFinal][yFinal] == vacio) {
+                        eliminarFichasReinasAbajoArriba(xInicial, yInicial, xFinal, yFinal, piezaEnemiga, piezaReyEnemiga);
                         piezasTablero[xInicial][yInicial] = vacio;
                         piezasTablero[xFinal][yFinal] = colorPieza;
                         movimientoCorrecto = true;
@@ -156,12 +160,12 @@ public class PiezasTablero {
                     }
                 }
             }
-        }else{
+        } else {
             //VA DE ARRIBA HACIA ABAJO
-            for(int i=1;i<piezasTablero.length;i++){
-                if((xInicial+i)==xFinal && ((yInicial - i) == yFinal) || (xInicial+i)==xFinal && ((yInicial + i) == yFinal)){
-                    if(piezasTablero[xFinal][yFinal]== vacio){
-                        eliminarFichasReinasArribaAbajo(xInicial,yInicial,xFinal,piezaEnemiga,piezaReyEnemiga);
+            for (int i = 1; i < piezasTablero.length; i++) {
+                if ((xInicial + i) == xFinal && ((yInicial - i) == yFinal) || (xInicial + i) == xFinal && ((yInicial + i) == yFinal)) {
+                    if (piezasTablero[xFinal][yFinal] == vacio) {
+                        eliminarFichasReinasArribaAbajo(xInicial, yInicial, xFinal,yFinal, piezaEnemiga, piezaReyEnemiga);
                         piezasTablero[xInicial][yInicial] = vacio;
                         piezasTablero[xFinal][yFinal] = colorPieza;
                         movimientoCorrecto = true;
@@ -173,118 +177,129 @@ public class PiezasTablero {
         return movimientoCorrecto;
     }
 
-    private void eliminarFichasReinasAbajoArriba(int xInicial, int yInicial, int xFinal, int enemiga, int enemigaR){
-        for(int i=1; i< piezasTablero.length; i++){
-            if(xInicial-i>=0 && yInicial-i>=0){
-                if(xInicial-i>=xFinal) {
-                    if (piezasTablero[xInicial - i][yInicial - i] == enemiga || piezasTablero[xInicial - i][yInicial - i] == enemigaR) {
-                        piezasTablero[xInicial - i][yInicial - i] = vacio;
-                        dibujarTablero.contadorPiezas();
-                        break;
+    //ESTA TENDRIA QUE ESTAR CORRECTA
+    private void eliminarFichasReinasAbajoArriba(int xInicial, int yInicial, int xFinal, int yFinal, int enemiga, int enemigaR) {
+        romper:
+        for (int i = 1; i < piezasTablero.length; i++) {
+            if (xInicial - i >= 0 && yInicial - i >= 0) {
+                if ((xInicial - i == xFinal) && (yInicial -i )== yFinal) {
+                    for(int j=1; j<=(yInicial); j++) {
+                        if (piezasTablero[xInicial - j][yInicial - j] == enemiga || piezasTablero[xInicial - j][yInicial - j] == enemigaR) {
+                            piezasTablero[xInicial - j][yInicial - j] = vacio;
+                            dibujarTablero.contadorPiezas();
+                            break romper;
+                        }
                     }
                 }
-            } if(xInicial-i>=0 && yInicial+i<8){
-                if(xInicial-i>=xFinal) {
-                    if (piezasTablero[xInicial - i][yInicial + i] == enemiga || piezasTablero[xInicial - i][yInicial + i] == enemigaR) {
-                        piezasTablero[xInicial - i][yInicial + i] = vacio;
-                        dibujarTablero.contadorPiezas();
-                        break;
+            }
+            if (xInicial - i >= 0 && yInicial + i < 8) {
+                if (xInicial - i == xFinal && (yInicial +i )== yFinal) {
+                    for(int j=1; j<=(yFinal-yInicial); j++) {
+                        if (piezasTablero[xInicial - j][yInicial + j] == enemiga || piezasTablero[xInicial - j][yInicial + j] == enemigaR) {
+                            piezasTablero[xInicial - j][yInicial + j] = vacio;
+                            dibujarTablero.contadorPiezas();
+                            break romper;
+                        }
                     }
                 }
             }
         }
     }
 
-    private void eliminarFichasReinasArribaAbajo(int xInicial, int yInicial, int xFinal, int enemiga, int enemigaR){
-        for(int i=1; i<piezasTablero.length; i++){
-            if(xInicial+i<=7 && yInicial-i>=0){
-                if(xInicial+i<=xFinal) {
-                    if (piezasTablero[xInicial + i][yInicial - i] == enemiga || piezasTablero[xInicial + i][yInicial - i] == enemigaR) {
-                        piezasTablero[xInicial + i][yInicial - i] = vacio;
-                        dibujarTablero.contadorPiezas();
-                        break;
+    private void eliminarFichasReinasArribaAbajo(int xInicial, int yInicial, int xFinal,int yFinal, int enemiga, int enemigaR) {
+        romper:
+        for (int i = 1; i < piezasTablero.length; i++) {
+            if (xInicial + i <= 7 && yInicial - i >= 0) {
+                if ((xInicial + i == xFinal) && (yInicial -i )== yFinal) {
+                    for(int j=1; j<=(yInicial); j++) {
+                        if (piezasTablero[xInicial + j][yInicial - j] == enemiga || piezasTablero[xInicial + j][yInicial - j] == enemigaR) {
+                            piezasTablero[xInicial + j][yInicial - j] = vacio;
+                            dibujarTablero.contadorPiezas();
+                            break romper;
+                        }
                     }
                 }
-            } if(xInicial+i<=7 && yInicial+i<8){
-                if(xInicial+i<=xFinal) {
-                    if (piezasTablero[xInicial + i][yInicial + i] == enemiga || piezasTablero[xInicial + i][yInicial + i] == enemigaR) {
-                        piezasTablero[xInicial + i][yInicial + i] = vacio;
-                        dibujarTablero.contadorPiezas();
-                        break;
+            }
+            if (xInicial + i <= 7 && yInicial + i < 8) {
+                if ((xInicial + i) == xFinal && (yInicial+i)==yFinal)  {
+                    for(int j=1; j<=(yFinal-yInicial); j++) {
+                        if (piezasTablero[xInicial + j][yInicial + j] == enemiga || piezasTablero[xInicial + j][yInicial + j] == enemigaR) {
+                            piezasTablero[xInicial + j][yInicial + j] = vacio;
+                            dibujarTablero.contadorPiezas();
+                            break romper;
+                        }
                     }
                 }
             }
         }
     }
 
-    private void eliminarFichasBlancas(int xInicial, int yInicial){
-        boolean completado = false;
-        try {
-            if (piezasTablero[xInicial - 1][yInicial - 1] == blancas || piezasTablero[xInicial - 1][yInicial - 1] == blancasR) {
-                piezasTablero[xInicial - 1][yInicial - 1] = vacio;
-                completado = true;
-                dibujarTablero.contadorPiezas();
-            }
-        } catch (ArrayIndexOutOfBoundsException e){
+    //ESTE ESTA CORRECTO
+    private void eliminarFichasBlancas(int xInicial, int yInicial, int yFinal) {
+        //boolean completado = false;
 
-        }
-        try{
-            if(!completado){
-                if(piezasTablero[xInicial-1][yInicial+1]==blancas|| piezasTablero[xInicial-1][yInicial+1]==blancasR){
-                    piezasTablero[xInicial-1][yInicial+1]=vacio;
+        if(yInicial-2 == yFinal) {
+            if ((xInicial - 1 >= 0) && (yInicial - 1 >= 0)) {
+                if (piezasTablero[xInicial - 1][yInicial - 1] == blancas || piezasTablero[xInicial - 1][yInicial - 1] == blancasR) {
+                    piezasTablero[xInicial - 1][yInicial - 1] = vacio;
+                    //completado = true;
                     dibujarTablero.contadorPiezas();
                 }
             }
-        }catch (ArrayIndexOutOfBoundsException ignore){
-
-        }
-    }
-
-    private void eliminarFichasRojas(int xInicial, int yInicial){
-        boolean completado = false;
-        try {
-            if (piezasTablero[xInicial + 1][yInicial - 1] == rojas || piezasTablero[xInicial + 1][yInicial - 1] == rojasR) {
-                piezasTablero[xInicial + 1][yInicial - 1] = vacio;
-                completado = true;
-                dibujarTablero.contadorPiezas();
-            }
-        }catch (ArrayIndexOutOfBoundsException e){
-
-        }
-        try {
-            if(!completado){
-                if(piezasTablero[xInicial+1][yInicial+1]==rojas|| piezasTablero[xInicial+1][yInicial+1]==rojasR){
-                    piezasTablero[xInicial+1][yInicial+1]=vacio;
+        }else if (yInicial+2 == yFinal) {
+            if ((xInicial - 1 >= 0) && (yInicial + 1) <= 7) {
+                if (piezasTablero[xInicial - 1][yInicial + 1] == blancas || piezasTablero[xInicial - 1][yInicial + 1] == blancasR) {
+                    piezasTablero[xInicial - 1][yInicial + 1] = vacio;
                     dibujarTablero.contadorPiezas();
                 }
             }
-        }catch (ArrayIndexOutOfBoundsException ignore){
-
         }
     }
 
-    public void llenarTablero(){
+    //ESTE ESTA CORRECTO
+    private void eliminarFichasRojas(int xInicial, int yInicial, int yFinal) {
+        //boolean completado = false;
 
-        for(int i=0; i<piezasTablero.length; i++){
-            for(int j =0; j<piezasTablero[0].length; j++){
-
-                if(j%2!=0){
-                    piezasTablero[0][j]= blancas;
-                    piezasTablero[2][j]= blancas;
-                    piezasTablero[4][j]=vacio;
-                    piezasTablero[6][j]=rojas;
-
-                }else{
-                    piezasTablero[1][j]= blancas;
-                    piezasTablero[3][j]=vacio;
-                    piezasTablero[5][j]=rojas;
-                    piezasTablero[7][j]=rojas;
+        if(yInicial-2 == yFinal) {
+            if ((xInicial + 1) <= 7 && (yInicial - 1) >= 0) {
+                if (piezasTablero[xInicial + 1][yInicial - 1] == rojas || piezasTablero[xInicial + 1][yInicial - 1] == rojasR) {
+                    piezasTablero[xInicial + 1][yInicial - 1] = vacio;
+                    //completado = true;
+                    dibujarTablero.contadorPiezas();
+                }
+            }
+        } else if (yInicial +2 == yFinal) {
+            if ((xInicial + 1) <= 7 && (yInicial + 1) <= 7) {
+                if (piezasTablero[xInicial + 1][yInicial + 1] == rojas || piezasTablero[xInicial + 1][yInicial + 1] == rojasR) {
+                    piezasTablero[xInicial + 1][yInicial + 1] = vacio;
+                    dibujarTablero.contadorPiezas();
                 }
             }
         }
     }
 
-    public int getPieza(int x, int y){
+    public void llenarTablero() {
+
+        for (int i = 0; i < piezasTablero.length; i++) {
+            for (int j = 0; j < piezasTablero[0].length; j++) {
+
+                if (j % 2 != 0) {
+                    piezasTablero[0][j] = blancas;
+                    piezasTablero[2][j] = blancas;
+                    piezasTablero[4][j] = vacio;
+                    piezasTablero[6][j] = rojas;
+
+                } else {
+                    piezasTablero[1][j] = blancas;
+                    piezasTablero[3][j] = vacio;
+                    piezasTablero[5][j] = rojas;
+                    piezasTablero[7][j] = rojas;
+                }
+            }
+        }
+    }
+
+    public int getPieza(int x, int y) {
         verificarRey();
         return piezasTablero[x][y];
     }
@@ -313,26 +328,26 @@ public class PiezasTablero {
         return turno;
     }
 
-    public boolean verificarGanador(){
+    public boolean verificarGanador() {
         boolean partidaGanada = false;
-        int cantidadRojos=0;
-        int cantidadBlancos=0;
+        int cantidadRojos = 0;
+        int cantidadBlancos = 0;
 
-        for(int i=0; i<piezasTablero.length; i++){
-            for(int j=0; j<piezasTablero[0].length; j++){
-                if(piezasTablero[i][j]==rojas || piezasTablero[i][j]==rojasR){
+        for (int i = 0; i < piezasTablero.length; i++) {
+            for (int j = 0; j < piezasTablero[0].length; j++) {
+                if (piezasTablero[i][j] == rojas || piezasTablero[i][j] == rojasR) {
                     cantidadRojos++;
-                }else if(piezasTablero[i][j]==blancas || piezasTablero[i][j]==blancasR){
+                } else if (piezasTablero[i][j] == blancas || piezasTablero[i][j] == blancasR) {
                     cantidadBlancos++;
                 }
             }
         }
 
-        if(cantidadRojos>0 && cantidadBlancos == 0){
+        if (cantidadRojos > 0 && cantidadBlancos == 0) {
             JOptionPane.showMessageDialog(null, "LOS ROJOS HAN GANADO");
             partidaGanada = true;
-        } else if (cantidadBlancos>0 && cantidadRojos==0) {
-            JOptionPane.showMessageDialog(null, "LOS ROJOS HAN GANADO");
+        } else if (cantidadBlancos > 0 && cantidadRojos == 0) {
+            JOptionPane.showMessageDialog(null, "LOS BLANCOS HAN GANADO");
             partidaGanada = true;
         }
 
