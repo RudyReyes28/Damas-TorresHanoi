@@ -101,8 +101,8 @@ public class VentanaInicio extends JFrame {
         ActionListener empezarHanoi = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VentanaHanoi hanoi = new VentanaHanoi();
-                hanoi.setVisible(true);
+                VentanaInicioHanoi iniciarHanoi = new VentanaInicioHanoi();
+                iniciarHanoi.setVisible(true);
                 dispose();
             }
         };

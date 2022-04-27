@@ -1,6 +1,4 @@
-package com.ipc1.Utilidades;
-
-import com.ipc1.damas.VentanaDamas;
+package com.ipc1.utilidades;
 
 import javax.swing.*;
 

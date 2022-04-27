@@ -1,5 +1,8 @@
 package com.ipc1.torres_hanoi.torres;
 
+import com.ipc1.torres_hanoi.VentanaHanoi;
+import com.ipc1.utilidades.Cronometro;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,26 +10,34 @@ import java.awt.event.ActionListener;
 
 public class DibujarTorres extends JLayeredPane implements ActionListener {
 
+    private Cronometro cronometro;
+    private Thread hiloTiempo;
     private JButton[][] bloques;
     private int cantidadBloques;
     private BloquesTorres verBloques;
     private int torreInicial, moverTorre = 0;
+    private VentanaHanoi ventana;
 
-    public DibujarTorres() {
+    public DibujarTorres(VentanaHanoi ventana,int cantidadBloques) {
+        this.ventana = ventana;
         //this.setLayout(new BorderLayout());
+        this.cantidadBloques = cantidadBloques;
+        this.setLayout(null);
+        this.setBackground(Color.white);
         this.setVisible(true);
-        this.setBounds(0, 0, 1100, 600);
+        this.setBounds(0, 0, 1100, 700);
+
         iniciar();
         llenarTorres();
     }
 
     public void iniciar() {
         bloques = new JButton[3][8];
-        verBloques = new BloquesTorres(4);
+        verBloques = new BloquesTorres(cantidadBloques);
         verBloques.llenarBloques();
 
         JLabel fondo = new JLabel();
-        fondo.setBounds(0, 0, 1100, 500);
+        fondo.setBounds(0, 100, 1100, 500);
         final ImageIcon imagenTorres = new ImageIcon(getClass().getResource("/imagenesHanoi/torres.png"));
         fondo.setIcon(new ImageIcon(imagenTorres.getImage().getScaledInstance(1100, 500, Image.SCALE_SMOOTH)));
         this.add(fondo, Integer.valueOf(0));
@@ -50,15 +61,15 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
         for (int i = 0; i < bloques[0].length; i++) {
 
             //TORRE 1
-            bloques[0][i].setBounds(70, 423 - moverYBloque1, 275, 40);
+            bloques[0][i].setBounds(70, 523 - moverYBloque1, 275, 40);
             this.add(bloques[0][i], Integer.valueOf(1));
 
             //TORRE 2
-            bloques[1][i].setBounds(416, 423 - moverYBloque1, 275, 40);
+            bloques[1][i].setBounds(416, 523 - moverYBloque1, 275, 40);
             this.add(bloques[1][i], Integer.valueOf(1));
 
             //TORRE 3
-            bloques[2][i].setBounds(760, 423 - moverYBloque1, 275, 40);
+            bloques[2][i].setBounds(760, 523 - moverYBloque1, 275, 40);
             this.add(bloques[2][i], Integer.valueOf(1));
 
             moverYBloque1 += 40;
@@ -67,6 +78,10 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
     }
 
     public void llenarTorres() {
+
+        cronometro = new Cronometro(ventana.getTiempo());
+        hiloTiempo = new Thread(cronometro);
+        hiloTiempo.start();
 
         for (int i = 0; i < bloques.length; i++) {
             for (int j = 0; j < bloques[0].length; j++) {
@@ -122,8 +137,10 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
         }
 
         if(verBloques.verificarGanador()){
+            hiloTiempo.interrupt();
             JOptionPane.showMessageDialog(null, "FELICIDADES HA GANADO");
             verBloques.llenarBloques();
+            ventana.reiniciarContador();
             llenarTorres();
             moverTorre=0;
         }
@@ -143,6 +160,7 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
 
                     } else if (moverTorre == 1) {
                         if (verBloques.moverBloque(torreInicial, i)) {
+                            ventana.setContadorMov();
                             moverBloques();
                         } else {
                             JOptionPane.showMessageDialog(null, "NO SE PUEDE REALIZAR EL MOVIMIENTO");

@@ -42,7 +42,7 @@ public class BloquesTorres {
             }
         }
 
-        bloqueMayor = 0;
+        bloqueMayor = 7;
         if(!ganador){
             if(retornarPosicionBloqueUltimo(2)==cantBloques-1) {
                 for (int i = 0; i < cantBloques; i++) {

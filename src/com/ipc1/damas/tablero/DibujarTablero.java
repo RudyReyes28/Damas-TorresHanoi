@@ -1,6 +1,6 @@
 package com.ipc1.damas.tablero;
 
-import com.ipc1.Utilidades.Cronometro;
+import com.ipc1.utilidades.Cronometro;
 import com.ipc1.damas.VentanaDamas;
 
 import javax.swing.*;
@@ -91,6 +91,7 @@ public class DibujarTablero extends JPanel implements ActionListener {
             hiloTiempo.interrupt();
             ventana.reiniciarContadores();
             dibujarTablero();
+
         }
     }
 

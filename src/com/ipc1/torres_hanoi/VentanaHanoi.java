@@ -8,11 +8,21 @@ import java.awt.*;
 public class VentanaHanoi extends JFrame {
 
     private DibujarTorres torresHanoi;
-    public VentanaHanoi() {
-        this.setSize(1100,540);
+    private int cantBloques;
+    private String nombreJugador;
+    private JLabel tiempo;
+    private JLabel cantMovimientos;
+    private int contadorMov;
+
+    public VentanaHanoi(String nombreJugador, int cantBloques) {
+        this.nombreJugador = nombreJugador;
+        this.cantBloques = cantBloques;
+        this.setSize(1100,700);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("TORRES DE HANOI");
+        this.setLayout(null);
+        tiempo = new JLabel();
         iniciar();
         aniadirTorres();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -20,12 +30,95 @@ public class VentanaHanoi extends JFrame {
     }
 
     public void iniciar(){
-        torresHanoi = new DibujarTorres();
+        torresHanoi = new DibujarTorres(this, cantBloques);
 
     }
 
     public void aniadirTorres(){
-        this.setLayout(new BorderLayout());
-        this.add(torresHanoi, BorderLayout.CENTER);
+        //this.setLayout(new BorderLayout());
+        this.add(torresHanoi);
+
+        iniciarComponentes();
+    }
+
+    public void iniciarComponentes(){
+        agregarEtiquetas();
+    }
+
+    public void agregarEtiquetas(){
+        JLabel tituloTiempo = new JLabel();
+        tituloTiempo.setBounds(750, 10,70,30);
+        tituloTiempo.setText("Tiempo:");
+        tituloTiempo.setHorizontalAlignment(SwingConstants.CENTER);
+        tituloTiempo.setForeground(Color.BLACK);
+        tituloTiempo.setFont(new Font("Chilanka",Font.BOLD,15));
+        torresHanoi.add(tituloTiempo);
+
+
+        tiempo.setBounds(820, 10,80,30);
+        tiempo.setOpaque(true);
+        tiempo.setBackground(Color.white);
+        tiempo.setText("0:0:0");
+        tiempo.setHorizontalAlignment(SwingConstants.CENTER);
+        tiempo.setForeground(Color.BLACK);
+        tiempo.setFont(new Font("Chilanka",Font.BOLD,15));
+        torresHanoi.add(tiempo);
+
+        JLabel etiquetaMovimientos = new JLabel();
+        etiquetaMovimientos.setBounds(910, 10,100,30);
+        etiquetaMovimientos.setText("Movimientos:");
+        etiquetaMovimientos.setHorizontalAlignment(SwingConstants.CENTER);
+        etiquetaMovimientos.setForeground(Color.BLACK);
+        etiquetaMovimientos.setFont(new Font("Chilanka",Font.BOLD,15));
+        torresHanoi.add(etiquetaMovimientos);
+
+        cantMovimientos = new JLabel();
+        cantMovimientos.setBounds(1010,10,50,30);
+        cantMovimientos.setOpaque(true);
+        cantMovimientos.setBackground(Color.white);
+        cantMovimientos.setText("0");
+        cantMovimientos.setHorizontalAlignment(SwingConstants.CENTER);
+        cantMovimientos.setForeground(Color.BLACK);
+        cantMovimientos.setFont(new Font("Chilanka",Font.BOLD,15));
+        torresHanoi.add(cantMovimientos);
+
+        JLabel torre1 = new JLabel();
+        torre1.setBounds(170,122,70,30);
+        torre1.setText("Torre 1");
+        torre1.setHorizontalAlignment(SwingConstants.CENTER);
+        torre1.setForeground(Color.BLACK);
+        torre1.setFont(new Font("Chilanka",Font.BOLD,17));
+        torresHanoi.add(torre1, Integer.valueOf(1));
+
+        JLabel torre2 = new JLabel();
+        torre2.setBounds(516,122,70,30);
+        torre2.setText("Torre 2");
+        torre2.setHorizontalAlignment(SwingConstants.CENTER);
+        torre2.setForeground(Color.BLACK);
+        torre2.setFont(new Font("Chilanka",Font.BOLD,17));
+        torresHanoi.add(torre2,Integer.valueOf(1));
+
+        JLabel torre3 = new JLabel();
+        torre3.setBounds(862,122,70,30);
+        torre3.setText("Torre 3");
+        torre3.setHorizontalAlignment(SwingConstants.CENTER);
+        torre3.setForeground(Color.BLACK);
+        torre3.setFont(new Font("Chilanka",Font.BOLD,17));
+        torresHanoi.add(torre3,Integer.valueOf(1));
+
+    }
+
+    public void setContadorMov() {
+        this.contadorMov += 1;
+        cantMovimientos.setText(String.valueOf(contadorMov));
+    }
+
+    public void reiniciarContador(){
+        this.contadorMov = 0;
+        cantMovimientos.setText(String.valueOf(contadorMov));
+    }
+
+    public JLabel getTiempo() {
+        return tiempo;
     }
 }
