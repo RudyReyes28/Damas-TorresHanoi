@@ -12,13 +12,13 @@ public class VentanaInicioHanoi extends JFrame {
 
     private JPanel panel;
     private String nombreJugador;
-    private JComboBox seleccionarDiscos;
-    private int discos;
+    private JComboBox seleccionarDiscos, seleccionarModo;
+    private int discos, modoJuego;
     private JTextField cajaNombre;
     private JButton guardarDatos, empezarJuego;
 
     public VentanaInicioHanoi() {
-        this.setSize(450,500);
+        this.setSize(500,500);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("AGREGAR DATOS TORRES DE HANOI");
@@ -38,7 +38,7 @@ public class VentanaInicioHanoi extends JFrame {
 
     public void agregarPanel(){
         panel = new JPanel();
-        panel.setBounds(0,0,450,500);
+        panel.setBounds(0,0,500,500);
         panel.setLayout(null);
         //panel.setBackground(Color.CYAN);
         this.add(panel);
@@ -70,6 +70,14 @@ public class VentanaInicioHanoi extends JFrame {
         etiquetaDiscos.setFont(new Font("Arial Black",Font.BOLD,15));
         panel.add(etiquetaDiscos);
 
+        JLabel modoDeJuego = new JLabel();
+        modoDeJuego.setBounds(15, 230,150,30);
+        modoDeJuego.setText("Modo de Juego:");
+        modoDeJuego.setHorizontalAlignment(SwingConstants.CENTER);
+        modoDeJuego.setForeground(Color.BLACK);
+        modoDeJuego.setFont(new Font("Arial Black",Font.BOLD,15));
+        panel.add(modoDeJuego);
+
     }
 
     public void agregarCajasTexto(){
@@ -83,23 +91,29 @@ public class VentanaInicioHanoi extends JFrame {
         seleccionarDiscos = new JComboBox(modos);
         seleccionarDiscos.setBounds(170,170,100,30);
         panel.add(seleccionarDiscos);
+
+        String [] modoJuego = {"Normal","Solucion Rapida"};
+        seleccionarModo = new JComboBox(modoJuego);
+        seleccionarModo.setBounds(170,230,150,30);
+        panel.add(seleccionarModo);
     }
 
     public void agregarBotones(){
         guardarDatos = new JButton();
-        guardarDatos.setBounds(170,230,150,30);
+        guardarDatos.setBounds(170,290,150,30);
         guardarDatos.setText("Guardar Datos");
         guardarDatos.setHorizontalAlignment(SwingConstants.CENTER);
         guardarDatos.setFont(new Font("Arial",Font.BOLD,15));
         panel.add(guardarDatos);
 
         empezarJuego = new JButton();
-        empezarJuego.setBounds(170,300,150,30);
+        empezarJuego.setBounds(170,350,150,30);
         empezarJuego.setText("Empezar Juego");
         empezarJuego.setHorizontalAlignment(SwingConstants.CENTER);
         empezarJuego.setFont(new Font("Arial",Font.BOLD,15));
         empezarJuego.setVisible(false);
         panel.add(empezarJuego);
+
     }
 
     public void agregarEventos(){
@@ -108,7 +122,7 @@ public class VentanaInicioHanoi extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 nombreJugador = cajaNombre.getText();
                 discos = Integer.parseInt(seleccionarDiscos.getSelectedItem().toString());
-
+                modoJuego = seleccionarModo.getSelectedIndex()+1;
                 if(nombreJugador.equals("")){
                     JOptionPane.showMessageDialog(null, "DEBE DE LLENAR LOS DATOS");
                 }else{
@@ -121,7 +135,7 @@ public class VentanaInicioHanoi extends JFrame {
         ActionListener eventoEmpezarPartida = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VentanaHanoi hanoi = new VentanaHanoi(nombreJugador,discos);
+                VentanaHanoi hanoi = new VentanaHanoi(nombreJugador,discos, modoJuego);
                 hanoi.setVisible(true);
                 dispose();
             }

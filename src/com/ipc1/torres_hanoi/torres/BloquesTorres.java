@@ -1,16 +1,25 @@
 package com.ipc1.torres_hanoi.torres;
 
+import com.ipc1.torres_hanoi.VentanaHanoi;
+
 public class BloquesTorres {
 
     private int cantBloques;
     private int [][] bloques;
+    private DibujarTorres dibujarTorres;
+    private int [][] solucion;
+    private int contador = 0;
 
     private final int bloque1 =8, bloque2= 7, bloque3 = 6, bloque4 = 5, bloque5 = 4;
     private final int bloque6 = 3, bloque7 = 2, bloque8 = 1, bloqueVacio = 0;
 
-    public BloquesTorres(int cantBloques) {
-        bloques = new int[3][8];
+    public BloquesTorres(int cantBloques, DibujarTorres dibujarTorres) {
         this.cantBloques = cantBloques;
+        this.dibujarTorres = dibujarTorres;
+        bloques = new int[3][8];
+        solucion = new int[(int) (Math.pow(2,cantBloques)-1)][2];
+        movimientoSolucion(cantBloques,0,1,2);
+
     }
     //de los mas grandes a los mas pequeños 8,7,6,5,4,3,2,1,0,(vacio)
     public void llenarBloques(){
@@ -125,7 +134,51 @@ public class BloquesTorres {
         return bloqueUltimo;
     }
 
+    public void resolverHanoi(int cantDiscos, int torreInicio, int torreApoyo, int torreFinal){
+
+        if(cantDiscos==1){
+            //TORRE INICIO A LA TORRE DESTINO
+
+            moverBloque(torreInicio,torreFinal);
+            dibujarTorres.getVentana().setContadorMov();
+            dibujarTorres.moverBloques();
+
+        }else{
+            resolverHanoi(cantDiscos-1,torreInicio,torreFinal,torreApoyo);
+
+            moverBloque(torreInicio,torreFinal);
+            dibujarTorres.getVentana().setContadorMov();
+            dibujarTorres.moverBloques();
+            resolverHanoi(cantDiscos-1,torreApoyo,torreInicio,torreFinal);
+        }
+
+        //dibujarTorres.moverBloques();
+
+    }
+
+    public void movimientoSolucion(int cantDiscos,int torreInicio, int torreApoyo, int torreFinal){
+        if(cantDiscos==1){
+            //TORRE INICIO A LA TORRE DESTINO
+
+            solucion[contador][0] = torreInicio;
+            solucion[contador][1] = torreFinal;
+            contador++;
+
+        }else{
+            movimientoSolucion(cantDiscos-1,torreInicio,torreFinal,torreApoyo);
+            solucion[contador][0] = torreInicio;
+            solucion[contador][1] = torreFinal;
+            contador++;
+            movimientoSolucion(cantDiscos-1,torreApoyo,torreInicio,torreFinal);
+        }
+    }
+
+
     public int getBloque(int torre, int nBloque){
         return bloques[torre][nBloque];
+    }
+
+    public int[][] getSolucion() {
+        return solucion;
     }
 }

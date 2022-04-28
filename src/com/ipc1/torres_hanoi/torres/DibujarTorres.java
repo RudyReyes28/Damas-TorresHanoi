@@ -17,11 +17,13 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
     private BloquesTorres verBloques;
     private int torreInicial, moverTorre = 0;
     private VentanaHanoi ventana;
+    private int modoJuego;
 
-    public DibujarTorres(VentanaHanoi ventana,int cantidadBloques) {
+    public DibujarTorres(VentanaHanoi ventana, int cantidadBloques, int modoJuego) {
         this.ventana = ventana;
         //this.setLayout(new BorderLayout());
         this.cantidadBloques = cantidadBloques;
+        this.modoJuego = modoJuego;
         this.setLayout(null);
         this.setBackground(Color.white);
         this.setVisible(true);
@@ -33,7 +35,7 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
 
     public void iniciar() {
         bloques = new JButton[3][8];
-        verBloques = new BloquesTorres(cantidadBloques);
+        verBloques = new BloquesTorres(cantidadBloques, this);
         verBloques.llenarBloques();
 
         JLabel fondo = new JLabel();
@@ -136,39 +138,49 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
             }
         }
 
-        if(verBloques.verificarGanador()){
+        if (verBloques.verificarGanador()) {
             hiloTiempo.interrupt();
             JOptionPane.showMessageDialog(null, "FELICIDADES HA GANADO");
             verBloques.llenarBloques();
             ventana.reiniciarContador();
             llenarTorres();
-            moverTorre=0;
+            moverTorre = 0;
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (modoJuego == 1) {
+            for (int i = 0; i < bloques.length; i++) {
+                for (int j = 0; j < bloques[0].length; j++) {
 
-        for (int i = 0; i < bloques.length; i++) {
-            for (int j = 0; j < bloques[0].length; j++) {
 
-                if (e.getSource() == bloques[i][j]) {
+                    if (e.getSource() == bloques[i][j]) {
 
-                    if (moverTorre == 0) {
-                        torreInicial = i;
-                        moverTorre = 1;
+                        if (moverTorre == 0) {
+                            torreInicial = i;
+                            moverTorre = 1;
 
-                    } else if (moverTorre == 1) {
-                        if (verBloques.moverBloque(torreInicial, i)) {
-                            ventana.setContadorMov();
-                            moverBloques();
-                        } else {
-                            JOptionPane.showMessageDialog(null, "NO SE PUEDE REALIZAR EL MOVIMIENTO");
+                        } else if (moverTorre == 1) {
+                            if (verBloques.moverBloque(torreInicial, i)) {
+                                ventana.setContadorMov();
+                                moverBloques();
+                            } else {
+                                JOptionPane.showMessageDialog(null, "NO SE PUEDE REALIZAR EL MOVIMIENTO");
+                            }
+                            moverTorre = 0;
                         }
-                        moverTorre = 0;
                     }
                 }
             }
         }
+    }
+
+    public VentanaHanoi getVentana() {
+        return ventana;
+    }
+
+    public BloquesTorres getVerBloques() {
+        return verBloques;
     }
 }

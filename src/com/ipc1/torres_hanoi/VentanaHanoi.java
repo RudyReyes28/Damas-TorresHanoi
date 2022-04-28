@@ -1,9 +1,12 @@
 package com.ipc1.torres_hanoi;
 
 import com.ipc1.torres_hanoi.torres.DibujarTorres;
+import com.ipc1.utilidades.MoverBloquesSolucion;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class VentanaHanoi extends JFrame {
 
@@ -13,10 +16,13 @@ public class VentanaHanoi extends JFrame {
     private JLabel tiempo;
     private JLabel cantMovimientos;
     private int contadorMov;
+    private int modoJuego;
+    private JButton resolverJuego;
 
-    public VentanaHanoi(String nombreJugador, int cantBloques) {
+    public VentanaHanoi(String nombreJugador, int cantBloques, int modoJuego) {
         this.nombreJugador = nombreJugador;
         this.cantBloques = cantBloques;
+        this.modoJuego = modoJuego;
         this.setSize(1100,700);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -30,7 +36,7 @@ public class VentanaHanoi extends JFrame {
     }
 
     public void iniciar(){
-        torresHanoi = new DibujarTorres(this, cantBloques);
+        torresHanoi = new DibujarTorres(this, cantBloques,modoJuego);
 
     }
 
@@ -43,6 +49,8 @@ public class VentanaHanoi extends JFrame {
 
     public void iniciarComponentes(){
         agregarEtiquetas();
+        agregarBoton();
+        agregarEventos();
     }
 
     public void agregarEtiquetas(){
@@ -108,6 +116,33 @@ public class VentanaHanoi extends JFrame {
 
     }
 
+    public void agregarBoton(){
+        resolverJuego = new JButton();
+        resolverJuego.setBounds(100,20,150,30);
+        resolverJuego.setText("Solucion rapida");
+        resolverJuego.setHorizontalAlignment(SwingConstants.CENTER);
+        resolverJuego.setFont(new Font("Arial",Font.BOLD,15));
+
+        torresHanoi.add(resolverJuego,Integer.valueOf(1));
+
+        if(modoJuego!=2){
+            resolverJuego.setVisible(false);
+        }
+    }
+
+    public void agregarEventos(){
+        ActionListener eventoResolverJuego = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                MoverBloquesSolucion bloquesSolucion = new MoverBloquesSolucion(VentanaHanoi.this);
+                Thread moverSolucion = new Thread(bloquesSolucion);
+                moverSolucion.start();
+            }
+        };
+        resolverJuego.addActionListener(eventoResolverJuego);
+    }
+
     public void setContadorMov() {
         this.contadorMov += 1;
         cantMovimientos.setText(String.valueOf(contadorMov));
@@ -120,5 +155,9 @@ public class VentanaHanoi extends JFrame {
 
     public JLabel getTiempo() {
         return tiempo;
+    }
+
+    public DibujarTorres getTorresHanoi() {
+        return torresHanoi;
     }
 }

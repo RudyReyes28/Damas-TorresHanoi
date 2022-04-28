@@ -12,8 +12,8 @@ public class Jugar {
         //VentanaDamas ventana = new VentanaDamas("Rudy","Juan",1);
         //ventana.setVisible(true);
 
-        VentanaHanoi hanoi = new VentanaHanoi("Rudy",4);
-        hanoi.setVisible(true);
+        //VentanaHanoi hanoi = new VentanaHanoi("Rudy",5,1);
+        //hanoi.setVisible(true);
 
         //VentanaInicio inicio = new VentanaInicio();
 
@@ -22,7 +22,7 @@ public class Jugar {
 
         //VentanaReporteDamas reportes = new VentanaReporteDamas();
 
-        //VentanaInicioHanoi inicioHanoi = new VentanaInicioHanoi();
-        //inicioHanoi.setVisible(true);
+        VentanaInicioHanoi inicioHanoi = new VentanaInicioHanoi();
+        inicioHanoi.setVisible(true);
     }
 }
