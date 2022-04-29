@@ -1,11 +1,15 @@
 package com.ipc1.ventanas;
 
+import com.ipc1.archivos.NombreUsuarios;
 import com.ipc1.damas.VentanaDamas;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class VentanaInicioDamas extends JFrame {
 
@@ -15,10 +19,15 @@ public class VentanaInicioDamas extends JFrame {
     private JButton guardarDatos, empezarJuego;
     private String jugador1 = "", jugador2 = "";
     private JComboBox seleccionarModo;
+    private JTextArea areaNombres;
     private int modoDeJuego=0;
     int moverY30 = 30;
+
+    private NombreUsuarios usuarios;
+
     public VentanaInicioDamas() {
-        this.setSize(450,500);
+        usuarios = new NombreUsuarios("JugadoresDamas.txt");
+        this.setSize(700,500);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("AGREGAR DATOS DAMAS");
@@ -33,12 +42,13 @@ public class VentanaInicioDamas extends JFrame {
         agregarCajasTexto();
         agregarListas();
         agregarBotones();
+        agregarAreaTexto();
         agregarEventos();
     }
 
     public void agregarPanel(){
         panel = new JPanel();
-        panel.setBounds(0,0,450,500);
+        panel.setBounds(0,0,700,500);
         panel.setLayout(null);
         panel.setBackground(Color.CYAN);
         this.add(panel);
@@ -47,7 +57,7 @@ public class VentanaInicioDamas extends JFrame {
     public void agregarEtiquetas(){
 
         JLabel titulo = new JLabel();
-        titulo.setBounds(0, 10,500,40);
+        titulo.setBounds(0, 10,700,40);
         titulo.setText("INGRESE LOS DATOS DEL LOS JUGADORES");
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setForeground(Color.BLACK);
@@ -131,6 +141,29 @@ public class VentanaInicioDamas extends JFrame {
         panel.add(empezarJuego);
     }
 
+    public void agregarAreaTexto(){
+        areaNombres = new JTextArea();
+        areaNombres.setBounds(450,70,200,200);
+        areaNombres.setText("JUGADORES REGISTRADOS:");
+        panel.add(areaNombres);
+
+        agregarUsuarios();
+    }
+
+    public void agregarUsuarios(){
+        ArrayList<String> nombres = new ArrayList<>();
+        usuarios.leerUsuarios(nombres,"JugadoresDamas.txt");
+        Set<String> hashSet = new HashSet<>(nombres);
+
+        nombres.clear();
+        nombres.addAll(hashSet);
+
+        for(int i=0; i<nombres.size(); i++){
+            areaNombres.append("\n"+nombres.get(i));
+        }
+
+    }
+
     public void agregarEventos(){
         ActionListener eventoGuardarDatos = new ActionListener() {
             @Override
@@ -142,6 +175,8 @@ public class VentanaInicioDamas extends JFrame {
                 if(jugador1.equals("") && jugador2.equals("")){
                     JOptionPane.showMessageDialog(null, "DEBE DE LLENAR LOS DATOS");
                 }else{
+                    usuarios.escribirUsuarios(jugador1);
+                    usuarios.escribirUsuarios(jugador2);
                     mensajeJugador1.setText(jugador1+" jugará con las fichas rojas, empezará primero");
                     mensajeJugador2.setText(jugador2+" jugará con las fichas blancas, empezará segundo");
                     mensajeJugador1.setVisible(true);
@@ -163,4 +198,5 @@ public class VentanaInicioDamas extends JFrame {
         guardarDatos.addActionListener(eventoGuardarDatos);
         empezarJuego.addActionListener(eventoEmpezarPartida);
     }
+
 }

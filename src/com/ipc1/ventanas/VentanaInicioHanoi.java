@@ -1,5 +1,6 @@
 package com.ipc1.ventanas;
 
+import com.ipc1.archivos.NombreUsuarios;
 import com.ipc1.damas.VentanaDamas;
 import com.ipc1.torres_hanoi.VentanaHanoi;
 
@@ -7,6 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class VentanaInicioHanoi extends JFrame {
 
@@ -16,9 +20,13 @@ public class VentanaInicioHanoi extends JFrame {
     private int discos, modoJuego;
     private JTextField cajaNombre;
     private JButton guardarDatos, empezarJuego;
+    private JTextArea areaNombres;
+
+    private NombreUsuarios usuarios;
 
     public VentanaInicioHanoi() {
-        this.setSize(500,500);
+        usuarios = new NombreUsuarios("JugadoresHanoi.txt");
+        this.setSize(700,500);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("AGREGAR DATOS TORRES DE HANOI");
@@ -33,20 +41,21 @@ public class VentanaInicioHanoi extends JFrame {
         agregarCajasTexto();
         agregarListas();
         agregarBotones();
+        agregarAreaTexto();
         agregarEventos();
     }
 
     public void agregarPanel(){
         panel = new JPanel();
-        panel.setBounds(0,0,500,500);
+        panel.setBounds(0,0,700,500);
         panel.setLayout(null);
-        //panel.setBackground(Color.CYAN);
+        panel.setBackground(Color.CYAN);
         this.add(panel);
     }
 
     public void agregarEtiquetas(){
         JLabel titulo = new JLabel();
-        titulo.setBounds(0, 10,500,40);
+        titulo.setBounds(0, 10,700,40);
         titulo.setText("INGRESE LOS DATOS DEL JUGADOR");
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setForeground(Color.BLACK);
@@ -116,6 +125,28 @@ public class VentanaInicioHanoi extends JFrame {
 
     }
 
+    public void agregarAreaTexto(){
+        areaNombres = new JTextArea();
+        areaNombres.setBounds(450,100,200,200);
+        areaNombres.setText("JUGADORES REGISTRADOS:");
+        panel.add(areaNombres);
+
+        agregarUsuarios();
+    }
+
+    public void agregarUsuarios(){
+        ArrayList<String> nombres = new ArrayList<>();
+        usuarios.leerUsuarios(nombres,"JugadoresHanoi.txt");
+        Set<String> hashSet = new HashSet<>(nombres);
+
+        nombres.clear();
+        nombres.addAll(hashSet);
+
+        for(int i=0; i<nombres.size(); i++){
+            areaNombres.append("\n"+nombres.get(i));
+        }
+    }
+
     public void agregarEventos(){
         ActionListener eventoGuardarDatos = new ActionListener() {
             @Override
@@ -126,6 +157,9 @@ public class VentanaInicioHanoi extends JFrame {
                 if(nombreJugador.equals("")){
                     JOptionPane.showMessageDialog(null, "DEBE DE LLENAR LOS DATOS");
                 }else{
+                    if(modoJuego!=2) {
+                        usuarios.escribirUsuarios(nombreJugador);
+                    }
                     empezarJuego.setVisible(true);
 
                 }

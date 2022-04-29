@@ -1,7 +1,7 @@
 package com.ipc1.torres_hanoi;
 
 import com.ipc1.torres_hanoi.torres.DibujarTorres;
-import com.ipc1.utilidades.MoverBloquesSolucion;
+import com.ipc1.torres_hanoi.modo_rapido.MoverBloquesSolucion;
 
 import javax.swing.*;
 import java.awt.*;

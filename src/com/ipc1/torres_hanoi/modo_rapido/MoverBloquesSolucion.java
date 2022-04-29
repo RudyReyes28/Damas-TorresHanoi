@@ -1,4 +1,4 @@
-package com.ipc1.utilidades;
+package com.ipc1.torres_hanoi.modo_rapido;
 
 import com.ipc1.torres_hanoi.VentanaHanoi;
 
