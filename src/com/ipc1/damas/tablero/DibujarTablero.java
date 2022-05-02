@@ -1,7 +1,9 @@
 package com.ipc1.damas.tablero;
 
+import com.ipc1.archivos.ReporteJuegos;
 import com.ipc1.utilidades.Cronometro;
 import com.ipc1.damas.VentanaDamas;
+import com.ipc1.ventanas.VentanaReporteDamas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +19,7 @@ public class DibujarTablero extends JPanel implements ActionListener {
     private int xInicial=0,yInicial=0, cambio;
     private VentanaDamas ventana;
     private int modo;  //1 versus //2 computadora
+    private int movimientosJ1, movimientosJ2;
 
 
     public DibujarTablero(VentanaDamas ventana, int modo) {
@@ -49,6 +52,8 @@ public class DibujarTablero extends JPanel implements ActionListener {
     }
 
     public void dibujarTablero(){
+        movimientosJ1=0;
+        movimientosJ2=0;
         cronometro = new Cronometro(ventana.getTiempo());
         hiloTiempo = new Thread(cronometro);
 
@@ -87,10 +92,13 @@ public class DibujarTablero extends JPanel implements ActionListener {
                 }
             }
         }else{
-            damas.llenarTablero();
             hiloTiempo.interrupt();
-            ventana.reiniciarContadores();
-            dibujarTablero();
+            //REPORTES
+            llenarReportes();
+            VentanaReporteDamas ventanaReporteDamas = new VentanaReporteDamas(ventana);
+            ventanaReporteDamas.setVisible(true);
+
+
 
         }
     }
@@ -123,6 +131,7 @@ public class DibujarTablero extends JPanel implements ActionListener {
                         } else if (cambio == 1) {
                             if (damas.moverFicha(damas.isTurno(), xInicial, yInicial, i, j)) {
                                 moverFichas();
+                                contadorMovimientos();
                                 damas.cambiarTurno();
                             } else {
                                 JOptionPane.showMessageDialog(null, "MOVIMIENTO INVALIDO");
@@ -148,6 +157,7 @@ public class DibujarTablero extends JPanel implements ActionListener {
             } else if (cambio == 1) {
                 if (damas.moverFicha(damas.isTurno(), xInicial, yInicial, i, j)) {
                     moverFichas();
+                    contadorMovimientos();
                     damas.cambiarTurno();
                 } else {
                     JOptionPane.showMessageDialog(null, "MOVIMIENTO INVALIDO");
@@ -159,6 +169,7 @@ public class DibujarTablero extends JPanel implements ActionListener {
             while(!movimientoBot()){
 
             }
+            contadorMovimientos();
             damas.cambiarTurno();
         }
 
@@ -187,7 +198,40 @@ public class DibujarTablero extends JPanel implements ActionListener {
         }
     }
 
+    public void contadorMovimientos(){
+        if(damas.isTurno()){
+            movimientosJ1 ++;
+        }else{
+            movimientosJ2 ++;
+        }
+    }
+
     public Thread getHiloTiempo(){
         return hiloTiempo;
+    }
+
+    public void llenarReportes(){
+        //reportes de partidas ganadas y perdidas
+        String reporteJugador1 = ventana.getNombreJugador1()+",1,";
+        String reporteJugador2 = ventana.getNombreJugador2()+",1,";
+        if(damas.retornarGanador()){
+            reporteJugador1 += "1,0,";
+            reporteJugador2 += "0,1,";
+        }else{
+            reporteJugador1 += "0,1,";
+            reporteJugador2 += "1,0,";
+        }
+        reporteJugador1 += movimientosJ1+","+movimientosJ1;
+        reporteJugador2 += movimientosJ2+","+movimientosJ2;
+
+        ReporteJuegos reporteJuegosDamas = new ReporteJuegos("ReporteDamas.txt");
+        reporteJuegosDamas.escribirReporte(reporteJugador1);
+        reporteJuegosDamas.escribirReporte(reporteJugador2);
+    }
+
+    public void reiniciarPartida(){
+        damas.llenarTablero();
+        ventana.reiniciarContadores();
+        dibujarTablero();
     }
 }

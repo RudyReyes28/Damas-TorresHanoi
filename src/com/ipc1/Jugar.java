@@ -5,6 +5,7 @@ import com.ipc1.torres_hanoi.VentanaHanoi;
 import com.ipc1.ventanas.VentanaInicioDamas;
 import com.ipc1.ventanas.VentanaInicioHanoi;
 import com.ipc1.ventanas.VentanaReporteDamas;
+import com.ipc1.ventanas.VentanaReportesHanoi;
 
 public class Jugar {
 
@@ -20,9 +21,13 @@ public class Jugar {
         //VentanaInicioDamas inicioDamas = new VentanaInicioDamas();
         //inicioDamas.setVisible(true);
 
-        //VentanaReporteDamas reportes = new VentanaReporteDamas();
+        //VentanaReporteDamas reportes = new VentanaReporteDamas(ventana);
+        //reportes.setVisible(true);
 
-        VentanaInicioHanoi inicioHanoi = new VentanaInicioHanoi();
-        inicioHanoi.setVisible(true);
+        //VentanaInicioHanoi inicioHanoi = new VentanaInicioHanoi();
+        //inicioHanoi.setVisible(true);
+
+        VentanaReportesHanoi reportesHanoi = new VentanaReportesHanoi();
+        reportesHanoi.setVisible(true);
     }
 }

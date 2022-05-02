@@ -354,4 +354,27 @@ public class PiezasTablero {
         return partidaGanada;
     }
 
+    public boolean retornarGanador(){
+        //TRUE JUGADOR1, FALSE JUGADOR 2
+        boolean jugadorGanador = false;
+        int cantidadRojos = 0;
+        int cantidadBlancos = 0;
+
+        for (int i = 0; i < piezasTablero.length; i++) {
+            for (int j = 0; j < piezasTablero[0].length; j++) {
+                if (piezasTablero[i][j] == rojas || piezasTablero[i][j] == rojasR) {
+                    cantidadRojos++;
+                } else if (piezasTablero[i][j] == blancas || piezasTablero[i][j] == blancasR) {
+                    cantidadBlancos++;
+                }
+            }
+        }
+
+        if (cantidadRojos > 0 && cantidadBlancos == 0) {
+            jugadorGanador = true;
+        }
+
+        return jugadorGanador;
+    }
+
 }
