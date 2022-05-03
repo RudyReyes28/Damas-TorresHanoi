@@ -1,10 +1,14 @@
 package com.ipc1.ventanas;
 
+import com.ipc1.archivos.ReporteJuegos;
 import com.ipc1.damas.VentanaDamas;
+import com.ipc1.torres_hanoi.VentanaHanoi;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class VentanaReportesHanoi extends JFrame {
 
@@ -14,10 +18,11 @@ public class VentanaReportesHanoi extends JFrame {
     private JButton regresarInicio, reintentar;
     private String [][] datosReportes;
     private JLabel masGanado, masPerdido;
-    //private VentanaDamas ventanaDamas;
+    private VentanaHanoi ventanaHanoi;
+    private double tiempoPromedio =0;
 
-    public VentanaReportesHanoi() {
-        //this.ventanaDamas = ventanaDamas;
+    public VentanaReportesHanoi(VentanaHanoi ventanaHanoi) {
+        this.ventanaHanoi = ventanaHanoi;
         this.setSize(1000,550);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -33,6 +38,7 @@ public class VentanaReportesHanoi extends JFrame {
         colocarEtiquetas();
         colocarBotones();
         colocarTabla();
+        colocarEventos();
     }
 
     public void colocarPanel(){
@@ -53,7 +59,7 @@ public class VentanaReportesHanoi extends JFrame {
         modelo.addColumn("Prom. Movimientos");
         modelo.addColumn("Prom. Tiempo");
 
-        //aniadirReportes();
+        aniadirReportes();
 
         tablaReportes = new JTable(modelo);
         tablaReportes.setBounds(50,60,600,350);
@@ -115,5 +121,154 @@ public class VentanaReportesHanoi extends JFrame {
         reintentar.setHorizontalAlignment(SwingConstants.CENTER);
         reintentar.setFont(new Font("Arial",Font.BOLD,15));
         panel.add(reintentar);
+    }
+
+    public void aniadirReportes(){
+        String nombreArchivo = "ReporteHanoi.txt";
+        ReporteJuegos reporteJuegosHanoi = new ReporteJuegos(nombreArchivo);
+        int cantFilas = reporteJuegosHanoi.cantidadFilas(nombreArchivo);
+
+        String [][] datosTemporal = new String[cantFilas][6];
+
+        reporteJuegosHanoi.leerArchivo(datosTemporal,nombreArchivo);
+
+        datosReportes = new String[cantFilas][6];
+
+        int contador=0;
+
+        for(int i=0; i<datosTemporal.length; i++) {
+            String nombreTemporal = datosTemporal[i][0];
+            int partGanadas = 0;
+            int partPerdidas = 0;
+            int partAbandonadas = 0;
+            int totalMovimientos = 0;
+            tiempoPromedio = 0;
+            for (int j = 0; j < datosTemporal.length; j++) {
+                if (nombreTemporal != null && datosTemporal[j][0] != null) {
+                    if (nombreTemporal.equals(datosTemporal[j][0])) {
+
+                        partGanadas += Integer.parseInt(datosTemporal[j][1]);
+                        partPerdidas += Integer.parseInt(datosTemporal[j][2]);
+                        partAbandonadas += Integer.parseInt(datosTemporal[j][3]);
+                        totalMovimientos += Integer.parseInt(datosTemporal[j][4]);
+                        calcularTiempoPromedio(datosTemporal[j][5]);
+
+                        datosTemporal[j][0] = null;
+                    }
+                }
+            }
+
+            if(nombreTemporal!=null){
+                datosReportes[contador][0] = nombreTemporal;
+                datosReportes[contador][1] = String.valueOf(partGanadas);
+                datosReportes[contador][2] = String.valueOf(partPerdidas);
+                datosReportes[contador][3] = String.valueOf(partAbandonadas);
+                datosReportes[contador][4] = String.valueOf(totalMovimientos/(partGanadas+partPerdidas));
+
+                double tiempoRe = Math.round((tiempoPromedio/(partGanadas+partPerdidas))*100.0)/100.0;
+                datosReportes[contador][5] = String.valueOf(tiempoRe)+" min";
+                contador++;
+            }
+
+        }
+
+        for(int i=0; i<datosReportes.length;i++){
+
+            if(datosReportes[i][0]!=null) {
+                modelo.addRow(datosReportes[i]);
+            }
+        }
+
+        aniadirMPJugador();
+    }
+
+    public void calcularTiempoPromedio(String tiempo){
+        int cant = tiempo.length();
+
+        if(cant==5){
+            int segundos = Integer.parseInt(tiempo.substring(4,5));
+            tiempoPromedio+= segundos/100f;
+        }else if(cant == 6){
+            String digito1 = tiempo.substring(4,5);
+
+            if(digito1.equals(":")){
+                int minuto = Integer.parseInt(tiempo.substring(2,4));
+                int segundos = Integer.parseInt(tiempo.substring(5,6));
+                tiempoPromedio+= minuto+(segundos/100f);
+            }else{
+                int minuto = Integer.parseInt(tiempo.substring(2,3));
+                int segundos = Integer.parseInt(tiempo.substring(4,6));
+                tiempoPromedio+= minuto+(segundos/100f);
+            }
+        }else if(cant==7){
+            int minuto = Integer.parseInt(tiempo.substring(2,3));
+            int segundos = Integer.parseInt(tiempo.substring(5,7));
+            tiempoPromedio+= minuto+(segundos/100f);
+        }
+    }
+
+    public void aniadirMPJugador(){
+        int cantJugadores = 0;
+        for(int i=0; i<datosReportes.length; i++){
+            if(datosReportes[i][0]!=null){
+                cantJugadores++;
+            }
+        }
+
+        String mejorJugador = "";
+        String peorJugador = "";
+
+        int victorias = 0;
+        int derrotas = 0;
+
+        for(int i=0; i<cantJugadores; i++){
+            if(datosReportes[i][0] !=null){
+                if(victorias < Integer.parseInt(datosReportes[i][1])){
+                    victorias = Integer.parseInt(datosReportes[i][1]);
+                    mejorJugador = datosReportes[i][0];
+                }
+
+                if(derrotas < Integer.parseInt(datosReportes[i][2])){
+                    derrotas = Integer.parseInt(datosReportes[i][2]);
+                    peorJugador = datosReportes[i][0];
+                }
+            }
+        }
+
+        /*if(mejorJugador.equals(peorJugador)){
+            if(victorias>=derrotas){
+                masGanado.setText(mejorJugador);
+            }else{
+                masPerdido.setText(peorJugador);
+            }
+        }else{
+        */
+
+            masGanado.setText(mejorJugador);
+            masPerdido.setText(peorJugador);
+        //}
+    }
+
+    public void colocarEventos(){
+        ActionListener eventoRegresar = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VentanaInicio ventanaInicio = new VentanaInicio();
+                dispose();
+                ventanaHanoi.dispose();
+            }
+        };
+
+        ActionListener eventoReintentar = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ventanaHanoi.getBloqueIndividual().setPosicionFinal(0);
+                ventanaHanoi.getTorresHanoi().reiniciarPartida();
+                dispose();
+            }
+        };
+
+        regresarInicio.addActionListener(eventoRegresar);
+        reintentar.addActionListener(eventoReintentar);
     }
 }

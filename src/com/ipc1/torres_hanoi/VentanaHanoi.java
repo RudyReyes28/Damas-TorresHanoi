@@ -1,7 +1,10 @@
 package com.ipc1.torres_hanoi;
 
+import com.ipc1.archivos.ReporteJuegos;
+import com.ipc1.torres_hanoi.modo_rapido.MoverBloqueIndividual;
 import com.ipc1.torres_hanoi.torres.DibujarTorres;
 import com.ipc1.torres_hanoi.modo_rapido.MoverBloquesSolucion;
+import com.ipc1.ventanas.VentanaReportesHanoi;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +20,10 @@ public class VentanaHanoi extends JFrame {
     private JLabel cantMovimientos;
     private int contadorMov;
     private int modoJuego;
-    private JButton resolverJuego;
+    private JButton resolverJuego, abandonar, resolverAvanzar, resolverRetroceder;
+    private JTextField casillaAR;
+    private MoverBloqueIndividual bloqueIndividual;
+
 
     public VentanaHanoi(String nombreJugador, int cantBloques, int modoJuego) {
         this.nombreJugador = nombreJugador;
@@ -49,6 +55,7 @@ public class VentanaHanoi extends JFrame {
 
     public void iniciarComponentes(){
         agregarEtiquetas();
+        agregarCajasTexto();
         agregarBoton();
         agregarEventos();
     }
@@ -116,21 +123,54 @@ public class VentanaHanoi extends JFrame {
 
     }
 
+    public void agregarCajasTexto(){
+        casillaAR = new JTextField();
+        casillaAR.setBounds(160,50,30,30);
+        casillaAR.setHorizontalAlignment(SwingConstants.CENTER);
+        casillaAR.setText("1");
+        torresHanoi.add(casillaAR,Integer.valueOf(1));
+    }
+
     public void agregarBoton(){
         resolverJuego = new JButton();
-        resolverJuego.setBounds(100,20,150,30);
+        resolverJuego.setBounds(105,15,150,30);
         resolverJuego.setText("Solucion rapida");
         resolverJuego.setHorizontalAlignment(SwingConstants.CENTER);
         resolverJuego.setFont(new Font("Arial",Font.BOLD,15));
 
         torresHanoi.add(resolverJuego,Integer.valueOf(1));
 
+        resolverAvanzar = new JButton();
+        resolverAvanzar.setBounds(200,50,80,30);
+        resolverAvanzar.setText("Avanzar");
+        resolverAvanzar.setHorizontalAlignment(SwingConstants.CENTER);
+        resolverAvanzar.setFont(new Font("Arial",Font.BOLD,12));
+        torresHanoi.add(resolverAvanzar,Integer.valueOf(1));
+
+        resolverRetroceder = new JButton();
+        resolverRetroceder.setBounds(50,50,100,30);
+        resolverRetroceder.setText("Retroceder");
+        resolverRetroceder.setHorizontalAlignment(SwingConstants.CENTER);
+        resolverRetroceder.setFont(new Font("Arial",Font.BOLD,12));
+        torresHanoi.add(resolverRetroceder,Integer.valueOf(1));
+
         if(modoJuego!=2){
             resolverJuego.setVisible(false);
+            resolverAvanzar.setVisible(false);
+            resolverRetroceder.setVisible(false);
         }
+
+        abandonar = new JButton();
+        abandonar.setBounds(900,45,140,30);
+        abandonar.setText("Abandonar");
+        abandonar.setHorizontalAlignment(SwingConstants.CENTER);
+        abandonar.setFont(new Font("Arial",Font.BOLD,15));
+        torresHanoi.add(abandonar,Integer.valueOf(1));
     }
 
     public void agregarEventos(){
+        bloqueIndividual = new MoverBloqueIndividual(VentanaHanoi.this);
+
         ActionListener eventoResolverJuego = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,11 +180,64 @@ public class VentanaHanoi extends JFrame {
                 moverSolucion.start();
             }
         };
+
+        ActionListener eventoAbandonar = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                torresHanoi.getHiloTiempo().interrupt();
+                if(modoJuego==1) {
+
+                    String reporte = nombreJugador + ",0,1,1," + contadorMov + "," + tiempo.getText();
+                    ReporteJuegos reportesHanoi = new ReporteJuegos("ReporteHanoi.txt");
+                    reportesHanoi.escribirReporte(reporte);
+                }
+                VentanaReportesHanoi ventanaReportesHanoi = new VentanaReportesHanoi(VentanaHanoi.this);
+                ventanaReportesHanoi.setVisible(true);
+
+            }
+        };
+
+        ActionListener eventoAvanzar = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(casillaAR.getText().equals("")){
+                    JOptionPane.showMessageDialog(null,"Ingrese cant. Movimientos");
+                }else {
+                    int avanzarM = Integer.parseInt(casillaAR.getText());
+                    bloqueIndividual.setRetrocederAvanzar(avanzarM);
+                    Thread moverIndividual = new Thread(bloqueIndividual);
+                    moverIndividual.start();
+                }
+            }
+        };
+
+        ActionListener eventoRetroceder = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(casillaAR.getText().equals("")){
+                    JOptionPane.showMessageDialog(null,"Ingrese cant. Movimientos");
+                }else {
+                    int avanzarM = Integer.parseInt(casillaAR.getText());
+                    bloqueIndividual.setRetrocederAvanzar(-avanzarM);
+                    Thread moverIndividual = new Thread(bloqueIndividual);
+                    moverIndividual.start();
+                }
+            }
+        };
+
         resolverJuego.addActionListener(eventoResolverJuego);
+        abandonar.addActionListener(eventoAbandonar);
+        resolverAvanzar.addActionListener(eventoAvanzar);
+        resolverRetroceder.addActionListener(eventoRetroceder);
     }
 
     public void setContadorMov() {
-        this.contadorMov += 1;
+        this.contadorMov ++;
+        cantMovimientos.setText(String.valueOf(contadorMov));
+    }
+
+    public void retrocederContador(){
+        this.contadorMov --;
         cantMovimientos.setText(String.valueOf(contadorMov));
     }
 
@@ -159,5 +252,17 @@ public class VentanaHanoi extends JFrame {
 
     public DibujarTorres getTorresHanoi() {
         return torresHanoi;
+    }
+
+    public String getNombreJugador() {
+        return nombreJugador;
+    }
+
+    public int getContadorMov() {
+        return contadorMov;
+    }
+
+    public MoverBloqueIndividual getBloqueIndividual() {
+        return bloqueIndividual;
     }
 }

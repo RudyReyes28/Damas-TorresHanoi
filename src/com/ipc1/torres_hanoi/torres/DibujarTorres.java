@@ -1,7 +1,9 @@
 package com.ipc1.torres_hanoi.torres;
 
+import com.ipc1.archivos.ReporteJuegos;
 import com.ipc1.torres_hanoi.VentanaHanoi;
 import com.ipc1.utilidades.Cronometro;
+import com.ipc1.ventanas.VentanaReportesHanoi;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,10 +143,10 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
         if (verBloques.verificarGanador()) {
             hiloTiempo.interrupt();
             JOptionPane.showMessageDialog(null, "FELICIDADES HA GANADO");
-            verBloques.llenarBloques();
-            ventana.reiniciarContador();
-            llenarTorres();
-            moverTorre = 0;
+            //TENGO QUE ESCRIBIR REPORTES
+            agregarReportes();
+            VentanaReportesHanoi ventanaReportesHanoi = new VentanaReportesHanoi(ventana);
+            ventanaReportesHanoi.setVisible(true);
         }
     }
 
@@ -182,5 +184,24 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
 
     public BloquesTorres getVerBloques() {
         return verBloques;
+    }
+
+    public void agregarReportes(){
+        if(modoJuego==1){
+            String reporte =ventana.getNombreJugador()+",1,0,0,"+ventana.getContadorMov()+","+ventana.getTiempo().getText();
+            ReporteJuegos reportesHanoi = new ReporteJuegos("ReporteHanoi.txt");
+            reportesHanoi.escribirReporte(reporte);
+        }
+    }
+
+    public Thread getHiloTiempo() {
+        return hiloTiempo;
+    }
+
+    public void reiniciarPartida(){
+        verBloques.llenarBloques();
+        ventana.reiniciarContador();
+        llenarTorres();
+        moverTorre = 0;
     }
 }
