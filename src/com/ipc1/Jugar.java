@@ -13,7 +13,7 @@ public class Jugar {
         //VentanaDamas ventana = new VentanaDamas("Rudy","Juan",1);
         //ventana.setVisible(true);
 
-        VentanaHanoi hanoi = new VentanaHanoi("Juan",5,2);
+        VentanaHanoi hanoi = new VentanaHanoi("Juan",5,1);
         hanoi.setVisible(true);
 
         //VentanaInicio inicio = new VentanaInicio();

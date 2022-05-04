@@ -30,7 +30,7 @@ public class VentanaReportesHanoi extends JFrame {
         this.setVisible(true);
         this.setLayout(null);
         iniciarComponentes();
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public void iniciarComponentes(){

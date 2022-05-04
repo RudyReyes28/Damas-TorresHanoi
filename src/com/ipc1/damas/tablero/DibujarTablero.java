@@ -230,8 +230,33 @@ public class DibujarTablero extends JPanel implements ActionListener {
     }
 
     public void reiniciarPartida(){
+        cronometro.reiniciarTiempo();
         damas.llenarTablero();
         ventana.reiniciarContadores();
         dibujarTablero();
+    }
+
+    public PiezasTablero getDamas() {
+        return damas;
+    }
+
+    public int getMovimientosJ1() {
+        return movimientosJ1;
+    }
+
+    public int getMovimientosJ2() {
+        return movimientosJ2;
+    }
+
+    public void setMovimientosJ1(int movimientosJ1) {
+        this.movimientosJ1 = movimientosJ1;
+    }
+
+    public void setMovimientosJ2(int movimientosJ2) {
+        this.movimientosJ2 = movimientosJ2;
+    }
+
+    public Cronometro getCronometro() {
+        return cronometro;
     }
 }

@@ -377,4 +377,21 @@ public class PiezasTablero {
         return jugadorGanador;
     }
 
+    public void copiarTablero(int [][] copiaTablero){
+        for(int i=0; i<piezasTablero.length; i++){
+            for(int j=0; j<piezasTablero[0].length; j++){
+                copiaTablero[i][j] = piezasTablero[i][j];
+            }
+        }
+    }
+
+    public void cargarTablero(int [][] copiaTablero){
+        for(int i=0; i<piezasTablero.length; i++){
+            for(int j=0; j<piezasTablero[0].length; j++){
+                piezasTablero[i][j] = copiaTablero[i][j];
+            }
+        }
+
+        dibujarTablero.moverFichas();
+    }
 }

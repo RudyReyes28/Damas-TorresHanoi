@@ -1,5 +1,6 @@
 package com.ipc1.damas;
 
+import com.ipc1.archivos.GuardarPartida;
 import com.ipc1.damas.tablero.DibujarTablero;
 import com.ipc1.ventanas.VentanaInicio;
 
@@ -16,14 +17,17 @@ public class VentanaDamas extends JFrame {
     private JLabel tiempo, piezasJugador1, piezasJugador2;
     private String nombreJugador1, nombreJugador2;
     private int contadorPiezas1, contadorPiezas2;
-    private JMenuItem guardarPartida, regresarPrincipal;
+    private JMenuItem guardarPartida, cargarPartida, regresarPrincipal;
     private int modoJuego;
+    private GuardarPartida salvarPartida;
+    private int minutos, segundos;
 
 
     public VentanaDamas(String nombreJugador1, String nombreJugador2, int modoJuego) {
         this.nombreJugador1=nombreJugador1;
         this.nombreJugador2=nombreJugador2;
         this.modoJuego = modoJuego;
+        salvarPartida = new GuardarPartida();
         this.setSize(700,556);
         //this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -131,10 +135,12 @@ public class VentanaDamas extends JFrame {
         JMenu menu = new JMenu();
         guardarPartida = new JMenuItem("Guardar Partida");
         regresarPrincipal = new JMenuItem("Regresar al Menu");
+        cargarPartida = new JMenuItem("Cargar Partida");
         menu.setText("Opciones");
         menu.setVisible(true);
         menu.add(guardarPartida);
         menu.add(regresarPrincipal);
+        menu.add(cargarPartida);
         barraMenu.add(menu);
         barraMenu.setVisible(true);
         this.setJMenuBar(barraMenu);
@@ -145,7 +151,7 @@ public class VentanaDamas extends JFrame {
         ActionListener accionGuardar = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,"Tengo que guardar");
+                guardarPartidaDamas();
             }
         };
         guardarPartida.addActionListener(accionGuardar);
@@ -161,6 +167,92 @@ public class VentanaDamas extends JFrame {
 
         regresarPrincipal.addActionListener(accionRegresar);
 
+        ActionListener accionCargarPartida = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cargarPartidaDamas();
+            }
+        };
+
+        cargarPartida.addActionListener(accionCargarPartida);
+
+    }
+
+    public void guardarPartidaDamas(){
+        int [][] copiaTablero = new int[8][8];
+        salvarPartida.crearArchivo("PartidaSalvadaDamas.txt");
+        tablero.getDamas().copiarTablero(copiaTablero);
+
+
+        for (int i = 0; i < copiaTablero.length; i++) {
+            String datos = "";
+            for (int j = 0; j < copiaTablero[0].length; j++) {
+                datos += copiaTablero[i][j]+",";
+            }
+
+            datos = datos.substring(0,datos.length()-1);
+
+            salvarPartida.guardarPartida(datos);
+        }
+        String movi = tablero.getMovimientosJ1()+","+tablero.getMovimientosJ2()+","+contadorPiezas1+","+contadorPiezas2;
+        salvarPartida.guardarMovimientos(movi);
+        salvarPartida.guardarTiempo(tiempo.getText());
+
+    }
+
+    public void cargarPartidaDamas(){
+        String [][] datos = new String[10][8];
+        salvarPartida.cargarDatos(datos,"PartidaSalvadaDamas.txt" );
+        try {
+            int[][] cargarTablero = new int[8][8];
+
+            for (int i = 0; i < cargarTablero.length; i++) {
+                for (int j = 0; j < cargarTablero[0].length; j++) {
+                    cargarTablero[i][j] = Integer.parseInt(datos[i][j]);
+                }
+            }
+
+            int movimientosJugador1 = Integer.parseInt(datos[8][1]);
+            int movimientosJugador2 = Integer.parseInt(datos[8][2]);
+            contadorPiezas1 = Integer.parseInt(datos[8][3]);
+            contadorPiezas2 = Integer.parseInt(datos[8][4]);
+            piezasJugador1.setText(String.valueOf(this.contadorPiezas1));
+            piezasJugador2.setText(String.valueOf(this.contadorPiezas2));
+
+            calcularTiempo(datos[9][1]);
+
+            tablero.getDamas().cargarTablero(cargarTablero);
+            tablero.setMovimientosJ1(movimientosJugador1);
+            tablero.setMovimientosJ2(movimientosJugador2);
+
+            tablero.getCronometro().setSegundos(segundos);
+            tablero.getCronometro().setMinutos(minutos);
+        }catch (NumberFormatException ignore){
+
+        }
+    }
+
+    public void calcularTiempo(String tiempo){
+        int cant = tiempo.length();
+
+        if(cant==5){
+            segundos = Integer.parseInt(tiempo.substring(4,5));
+
+        }else if(cant == 6){
+            String digito1 = tiempo.substring(4,5);
+
+            if(digito1.equals(":")){
+                 minutos = Integer.parseInt(tiempo.substring(2,4));
+                 segundos = Integer.parseInt(tiempo.substring(5,6));
+            }else{
+                minutos = Integer.parseInt(tiempo.substring(2,3));
+                segundos = Integer.parseInt(tiempo.substring(4,6));
+
+            }
+        }else if(cant==7){
+            minutos = Integer.parseInt(tiempo.substring(2,3));
+            segundos = Integer.parseInt(tiempo.substring(5,7));
+        }
     }
 
     public void setContadorPiezas1(int contadorPiezas1) {

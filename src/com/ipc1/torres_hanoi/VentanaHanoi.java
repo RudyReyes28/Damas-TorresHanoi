@@ -1,9 +1,11 @@
 package com.ipc1.torres_hanoi;
 
+import com.ipc1.archivos.GuardarPartida;
 import com.ipc1.archivos.ReporteJuegos;
 import com.ipc1.torres_hanoi.modo_rapido.MoverBloqueIndividual;
 import com.ipc1.torres_hanoi.torres.DibujarTorres;
 import com.ipc1.torres_hanoi.modo_rapido.MoverBloquesSolucion;
+import com.ipc1.ventanas.VentanaInicio;
 import com.ipc1.ventanas.VentanaReportesHanoi;
 
 import javax.swing.*;
@@ -16,19 +18,23 @@ public class VentanaHanoi extends JFrame {
     private DibujarTorres torresHanoi;
     private int cantBloques;
     private String nombreJugador;
-    private JLabel tiempo;
+    private JLabel tiempo, etiquetaTruco;
     private JLabel cantMovimientos;
     private int contadorMov;
     private int modoJuego;
-    private JButton resolverJuego, abandonar, resolverAvanzar, resolverRetroceder;
+    private JButton resolverJuego, abandonar, resolverAvanzar, resolverRetroceder, truco;
     private JTextField casillaAR;
     private MoverBloqueIndividual bloqueIndividual;
+    private JMenuItem guardarPartida, cargarPartida, regresarPrincipal;
+    private GuardarPartida salvarPartida;
+    private int minutos, segundos;
 
 
     public VentanaHanoi(String nombreJugador, int cantBloques, int modoJuego) {
         this.nombreJugador = nombreJugador;
         this.cantBloques = cantBloques;
         this.modoJuego = modoJuego;
+        salvarPartida = new GuardarPartida();
         this.setSize(1100,700);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -55,6 +61,7 @@ public class VentanaHanoi extends JFrame {
 
     public void iniciarComponentes(){
         agregarEtiquetas();
+        colocarMenu();
         agregarCajasTexto();
         agregarBoton();
         agregarEventos();
@@ -121,6 +128,134 @@ public class VentanaHanoi extends JFrame {
         torre3.setFont(new Font("Chilanka",Font.BOLD,17));
         torresHanoi.add(torre3,Integer.valueOf(1));
 
+        etiquetaTruco = new JLabel();
+        etiquetaTruco.setBounds(0,600,1100,40);
+        etiquetaTruco.setHorizontalAlignment(SwingConstants.CENTER);
+        etiquetaTruco.setForeground(Color.BLACK);
+        etiquetaTruco.setFont(new Font("Chilanka",Font.BOLD,17));
+        torresHanoi.add(etiquetaTruco,Integer.valueOf(1));
+
+    }
+
+    public void colocarMenu(){
+        JMenuBar barraMenu = new JMenuBar();
+        JMenu menu = new JMenu();
+        guardarPartida = new JMenuItem("Guardar Partida");
+        regresarPrincipal = new JMenuItem("Regresar al Menu");
+        cargarPartida = new JMenuItem("Cargar Partida");
+        menu.setText("Opciones");
+        menu.setVisible(true);
+        menu.add(guardarPartida);
+        menu.add(cargarPartida);
+        menu.add(regresarPrincipal);
+
+        barraMenu.add(menu);
+        barraMenu.setVisible(true);
+        this.setJMenuBar(barraMenu);
+        accionMenu();
+    }
+
+    public void accionMenu(){
+        ActionListener accionGuardar = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guardarPartidaHanoi();
+            }
+        };
+        guardarPartida.addActionListener(accionGuardar);
+
+        ActionListener accionRegresar = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                torresHanoi.getHiloTiempo().interrupt();
+                VentanaInicio regresarInicio = new VentanaInicio();
+                dispose();
+            }
+        };
+
+        regresarPrincipal.addActionListener(accionRegresar);
+
+        ActionListener accionCargarPartida = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(modoJuego==1) {
+                    cargarPartidaHanoi();
+                }else{
+                    JOptionPane.showMessageDialog(null,"No se puede cargar partida en este modo");
+                }
+            }
+        };
+
+        cargarPartida.addActionListener(accionCargarPartida);
+    }
+
+    public void guardarPartidaHanoi(){
+        int [][] copiaTorres = new int[3][8];
+        salvarPartida.crearArchivo("PartidaSalvadaHanoi.txt");
+        torresHanoi.getVerBloques().guardarPartida(copiaTorres);
+
+        for (int i = 0; i < copiaTorres.length; i++) {
+            String datos = "";
+            for (int j = 0; j < copiaTorres[0].length; j++) {
+                datos += copiaTorres[i][j]+",";
+            }
+
+            datos = datos.substring(0,datos.length()-1);
+
+            salvarPartida.guardarPartida(datos);
+        }
+
+        salvarPartida.guardarMovimientos(String.valueOf(contadorMov));
+        salvarPartida.guardarTiempo(tiempo.getText());
+    }
+
+    public void cargarPartidaHanoi(){
+        String [][] datos = new String[5][8];
+        salvarPartida.cargarDatos(datos,"PartidaSalvadaHanoi.txt" );
+        try {
+            int[][] cargarTorres = new int[3][8];
+
+            for (int i = 0; i < cargarTorres.length; i++) {
+                for (int j = 0; j < cargarTorres[0].length; j++) {
+                    cargarTorres[i][j] = Integer.parseInt(datos[i][j]);
+                }
+            }
+
+            contadorMov = Integer.parseInt(datos[3][1]);
+            cantMovimientos.setText(String.valueOf(contadorMov));
+
+            calcularTiempo(datos[4][1]);
+
+            torresHanoi.getVerBloques().cargarPartida(cargarTorres);
+
+            torresHanoi.getCronometro().setSegundos(segundos);
+            torresHanoi.getCronometro().setMinutos(minutos);
+        }catch (NumberFormatException ignore){
+
+        }
+    }
+
+    public void calcularTiempo(String tiempo){
+        int cant = tiempo.length();
+
+        if(cant==5){
+            segundos = Integer.parseInt(tiempo.substring(4,5));
+
+        }else if(cant == 6){
+            String digito1 = tiempo.substring(4,5);
+
+            if(digito1.equals(":")){
+                minutos = Integer.parseInt(tiempo.substring(2,4));
+                segundos = Integer.parseInt(tiempo.substring(5,6));
+            }else{
+                minutos = Integer.parseInt(tiempo.substring(2,3));
+                segundos = Integer.parseInt(tiempo.substring(4,6));
+
+            }
+        }else if(cant==7){
+            minutos = Integer.parseInt(tiempo.substring(2,3));
+            segundos = Integer.parseInt(tiempo.substring(5,7));
+        }
     }
 
     public void agregarCajasTexto(){
@@ -129,6 +264,10 @@ public class VentanaHanoi extends JFrame {
         casillaAR.setHorizontalAlignment(SwingConstants.CENTER);
         casillaAR.setText("1");
         torresHanoi.add(casillaAR,Integer.valueOf(1));
+
+        if(modoJuego == 1){
+            casillaAR.setVisible(false);
+        }
     }
 
     public void agregarBoton(){
@@ -154,10 +293,19 @@ public class VentanaHanoi extends JFrame {
         resolverRetroceder.setFont(new Font("Arial",Font.BOLD,12));
         torresHanoi.add(resolverRetroceder,Integer.valueOf(1));
 
+        truco = new JButton();
+        truco.setBounds(950,85,70,30);
+        truco.setText("Truco");
+        truco.setHorizontalAlignment(SwingConstants.CENTER);
+        truco.setFont(new Font("Arial",Font.BOLD,12));
+        torresHanoi.add(truco,Integer.valueOf(1));
+
         if(modoJuego!=2){
             resolverJuego.setVisible(false);
             resolverAvanzar.setVisible(false);
             resolverRetroceder.setVisible(false);
+        }else{
+            truco.setVisible(false);
         }
 
         abandonar = new JButton();
@@ -225,10 +373,19 @@ public class VentanaHanoi extends JFrame {
             }
         };
 
+        ActionListener eventoTruco = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String movTruco = torresHanoi.getVerBloques().mostrarMovimientoTruco();
+                etiquetaTruco.setText(movTruco);
+            }
+        };
+
         resolverJuego.addActionListener(eventoResolverJuego);
         abandonar.addActionListener(eventoAbandonar);
         resolverAvanzar.addActionListener(eventoAvanzar);
         resolverRetroceder.addActionListener(eventoRetroceder);
+        truco.addActionListener(eventoTruco);
     }
 
     public void setContadorMov() {

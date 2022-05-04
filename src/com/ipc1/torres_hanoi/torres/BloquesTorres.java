@@ -68,22 +68,26 @@ public class BloquesTorres {
         return ganador;
     }
 
-    public boolean verificarMovimiento(int torreInicial){
-        boolean posicionCorrecta = false;
-        int bloqueTorre = 0;
+    public boolean activarTruco(int torreInicial, int torreFinal){
+        boolean correcto = false;
 
-        for(int i=0; i<bloques[0].length; i++){
-            if(bloqueTorre< bloques[torreInicial][i]){
-                bloqueTorre = bloques[torreInicial][i];
+        //BUSCAR CUAL ES EL BLOQUE QUE VAMOS A MOVER
+        int bloqueMover = retornarBloqueUltimo(torreInicial);
+        int posicionBloqueMover = retornarPosicionBloqueUltimo(torreInicial);
+        //BUSCAR CUAL ES EL BLOQUE A DONDE VAMOS A MOVERLO
+        int bloqueTorre = retornarBloqueUltimo(torreFinal);
+        int posicionBloqueMovidoTorre = retornarPosicionBloqueUltimo(torreFinal);
+
+        if(bloqueTorre==0){
+            if(posicionBloqueMovidoTorre+1<8){
+                correcto = true;
+            }
+        }else if(bloqueMover<bloqueTorre){
+            if(posicionBloqueMovidoTorre+1<8){
+                correcto = true;
             }
         }
-
-        if(bloqueTorre != 0){
-            posicionCorrecta = true;
-        }
-
-        return posicionCorrecta;
-
+        return correcto;
     }
 
     public boolean moverBloque(int torreInicial, int torreFinal){
@@ -134,27 +138,6 @@ public class BloquesTorres {
         return bloqueUltimo;
     }
 
-    public void resolverHanoi(int cantDiscos, int torreInicio, int torreApoyo, int torreFinal){
-
-        if(cantDiscos==1){
-            //TORRE INICIO A LA TORRE DESTINO
-
-            moverBloque(torreInicio,torreFinal);
-            dibujarTorres.getVentana().setContadorMov();
-            dibujarTorres.moverBloques();
-
-        }else{
-            resolverHanoi(cantDiscos-1,torreInicio,torreFinal,torreApoyo);
-
-            moverBloque(torreInicio,torreFinal);
-            dibujarTorres.getVentana().setContadorMov();
-            dibujarTorres.moverBloques();
-            resolverHanoi(cantDiscos-1,torreApoyo,torreInicio,torreFinal);
-        }
-
-        //dibujarTorres.moverBloques();
-
-    }
 
     public void movimientoSolucion(int cantDiscos,int torreInicio, int torreApoyo, int torreFinal){
         if(cantDiscos==1){
@@ -180,5 +163,43 @@ public class BloquesTorres {
 
     public int[][] getSolucion() {
         return solucion;
+    }
+
+    public void guardarPartida(int [][] copiaTorres){
+        for(int i=0; i<bloques.length; i++){
+            for(int j=0; j<bloques[0].length; j++){
+                copiaTorres[i][j] = bloques[i][j];
+            }
+        }
+    }
+
+    public void cargarPartida(int [][] copiaTorres){
+        for(int i=0; i<bloques.length; i++){
+            for(int j=0; j<bloques[0].length; j++){
+                bloques[i][j] = copiaTorres[i][j];
+            }
+
+            dibujarTorres.moverBloques();
+        }
+    }
+
+    public String mostrarMovimientoTruco(){
+        int torreI =-1;
+        int torreF = -1;
+        for(int i=0; i<solucion.length; i++){
+
+                if(activarTruco(solucion[i][0],solucion[i][1])){
+                    torreI = solucion[i][0];
+                    torreF = solucion[i][1];
+                    break;
+                }
+
+        }
+
+        if(torreI <0 && torreF<0){
+            return "No hay movimientos posibles";
+        }else{
+            return "Mover torre "+(torreI+1)+" a la torre "+(torreF+1);
+        }
     }
 }

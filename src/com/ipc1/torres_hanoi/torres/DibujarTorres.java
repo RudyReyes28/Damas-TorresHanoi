@@ -199,9 +199,14 @@ public class DibujarTorres extends JLayeredPane implements ActionListener {
     }
 
     public void reiniciarPartida(){
+        cronometro.reiniciarTiempo();
         verBloques.llenarBloques();
         ventana.reiniciarContador();
         llenarTorres();
         moverTorre = 0;
+    }
+
+    public Cronometro getCronometro() {
+        return cronometro;
     }
 }
