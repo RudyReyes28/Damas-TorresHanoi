@@ -130,8 +130,8 @@ public class DibujarTablero extends JPanel implements ActionListener {
                             cambio = 1;
                         } else if (cambio == 1) {
                             if (damas.moverFicha(damas.isTurno(), xInicial, yInicial, i, j)) {
-                                moverFichas();
                                 contadorMovimientos();
+                                moverFichas();
                                 damas.cambiarTurno();
                             } else {
                                 JOptionPane.showMessageDialog(null, "MOVIMIENTO INVALIDO");
@@ -156,8 +156,8 @@ public class DibujarTablero extends JPanel implements ActionListener {
                 cambio = 1;
             } else if (cambio == 1) {
                 if (damas.moverFicha(damas.isTurno(), xInicial, yInicial, i, j)) {
-                    moverFichas();
                     contadorMovimientos();
+                    moverFichas();
                     damas.cambiarTurno();
                 } else {
                     JOptionPane.showMessageDialog(null, "MOVIMIENTO INVALIDO");
@@ -221,8 +221,8 @@ public class DibujarTablero extends JPanel implements ActionListener {
             reporteJugador1 += "0,1,";
             reporteJugador2 += "1,0,";
         }
-        reporteJugador1 += movimientosJ1+","+movimientosJ1;
-        reporteJugador2 += movimientosJ2+","+movimientosJ2;
+        reporteJugador1 += movimientosJ1+","+ventana.getTiempo().getText();
+        reporteJugador2 += movimientosJ2+","+ventana.getTiempo().getText();
 
         ReporteJuegos reporteJuegosDamas = new ReporteJuegos("ReporteDamas.txt");
         reporteJuegosDamas.escribirReporte(reporteJugador1);

@@ -69,6 +69,7 @@ public class VentanaReportesHanoi extends JFrame {
         scroll.setBounds(50,60,600,350);
         panel.add(scroll);
 
+
     }
 
     public void colocarEtiquetas(){

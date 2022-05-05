@@ -9,6 +9,7 @@ public class GuardarPartida {
     public void crearArchivo(String archivoPartida) {
         guardarPartida = new File(archivoPartida);
 
+        guardarPartida.delete();
         try {
             guardarPartida.createNewFile();
         } catch (IOException e) {
