@@ -139,8 +139,8 @@ public class VentanaDamas extends JFrame {
         menu.setText("Opciones");
         menu.setVisible(true);
         menu.add(guardarPartida);
-        menu.add(regresarPrincipal);
         menu.add(cargarPartida);
+        menu.add(regresarPrincipal);
         barraMenu.add(menu);
         barraMenu.setVisible(true);
         this.setJMenuBar(barraMenu);

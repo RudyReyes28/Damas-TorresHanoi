@@ -15,6 +15,8 @@ public class VentanaReporteDamas extends JFrame {
     private JTable tablaReportes, tablaVictorias;
     private JPanel panel;
     private JButton regresarInicio, reintentar,verListado;
+    private JButton ordenarPorVictorias, ordenarPorDerrotas;
+    private int ordenVictorias = 1, ordenDerrotas = 1;
     private String [][] datosReportes, datosVictorias;
     private VentanaDamas ventanaDamas;
 
@@ -69,22 +71,22 @@ public class VentanaReporteDamas extends JFrame {
         aniadirReportes();
 
         tablaReportes = new JTable(modelo);
-        tablaReportes.setBounds(50,60,600,350);
+        tablaReportes.setBounds(50,60,600,340);
         panel.add(tablaReportes);
 
         JScrollPane scroll = new JScrollPane(tablaReportes,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scroll.setBounds(50,60,600,350);
+        scroll.setBounds(50,60,600,340);
         panel.add(scroll);
 
 
 
 
         tablaVictorias = new JTable(modeloVictoria);
-        tablaVictorias.setBounds(700,60,300,350);
+        tablaVictorias.setBounds(700,60,300,340);
         panel.add(tablaVictorias);
 
         JScrollPane scrollVictorias = new JScrollPane(tablaVictorias,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollVictorias.setBounds(700,60,300,350);
+        scrollVictorias.setBounds(700,60,300,340);
         panel.add(scrollVictorias);
 
 
@@ -93,7 +95,7 @@ public class VentanaReporteDamas extends JFrame {
     public void colocarEtiquetas(){
         JLabel partidaCorta = new JLabel();
         partidaCorta.setBounds(750,15,200,30);
-        partidaCorta.setText("Datos Partida mas corta");
+        partidaCorta.setText("Datos Victoria mas corta");
         partidaCorta.setHorizontalAlignment(SwingConstants.CENTER);
         partidaCorta.setFont(new Font("Chilanka",Font.BOLD,16));
         panel.add(partidaCorta);
@@ -127,6 +129,20 @@ public class VentanaReporteDamas extends JFrame {
         verListado.setHorizontalAlignment(SwingConstants.CENTER);
         verListado.setFont(new Font("Arial",Font.BOLD,15));
         panel.add(verListado);
+
+        ordenarPorVictorias = new JButton();
+        ordenarPorVictorias.setBounds(50,410,200,30);
+        ordenarPorVictorias.setText("Orden por Victorias de - a +");
+        ordenarPorVictorias.setHorizontalAlignment(SwingConstants.CENTER);
+        ordenarPorVictorias.setFont(new Font("Arial",Font.BOLD,12));
+        panel.add(ordenarPorVictorias);
+
+        ordenarPorDerrotas = new JButton();
+        ordenarPorDerrotas.setBounds(260,410,200,30);
+        ordenarPorDerrotas.setText("Orden por Derrotas de - a +");
+        ordenarPorDerrotas.setHorizontalAlignment(SwingConstants.CENTER);
+        ordenarPorDerrotas.setFont(new Font("Arial",Font.BOLD,12));
+        panel.add(ordenarPorDerrotas);
     }
 
     public void aniadirReportes(){
@@ -162,8 +178,8 @@ public class VentanaReporteDamas extends JFrame {
 
                         if(datosTemporal[j][2].equals("1") ) {
                             mejorMovimiento = Integer.parseInt(datosTemporal[i][4]);
-                            if (Integer.parseInt(datosTemporal[j][4]) < mejorMovimiento) ;
-                            {
+                            mejorTiempo = datosTemporal[i][5];
+                            if (Integer.parseInt(datosTemporal[j][4]) < mejorMovimiento){
                                 mejorMovimiento = Integer.parseInt(datosTemporal[j][4]);
                                 mejorTiempo = datosTemporal[j][5];
                             }
@@ -203,6 +219,7 @@ public class VentanaReporteDamas extends JFrame {
             }
         }
 
+
     }
 
     public void colocarEventos(){
@@ -231,8 +248,120 @@ public class VentanaReporteDamas extends JFrame {
             }
         };
 
+        ActionListener eventoOrdenVictorias = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ordenarFilasPorVictorias();
+            }
+        };
+
+        ActionListener eventoOrdenDerrotas = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ordenarFilasPorDerrota();
+            }
+        };
+
         regresarInicio.addActionListener(eventoRegresar);
         reintentar.addActionListener(eventoReintentar);
         verListado.addActionListener(eventoVerListado);
+        ordenarPorVictorias.addActionListener(eventoOrdenVictorias);
+        ordenarPorDerrotas.addActionListener(eventoOrdenDerrotas);
+    }
+
+    public void ordenarFilasPorVictorias(){
+        int cantFilas = 0;
+
+        for(int i=0; i<datosReportes.length; i++){
+            if(datosReportes[i][0]!=null){
+                cantFilas++;
+            }else{
+                break;
+            }
+        }
+
+        String [] filaAux;
+        for(int i=0; i<cantFilas; i++){
+            for(int j=0; j<cantFilas-1; j++){
+                if(Integer.parseInt(datosReportes[j][2])>Integer.parseInt(datosReportes[j+1][2])){
+                    filaAux = datosReportes[j];
+                    datosReportes[j] = datosReportes[j+1];
+                    datosReportes[j+1] = filaAux;
+                }
+            }
+        }
+
+        //Orden por Victorias de + a -
+        if(ordenVictorias==1){
+            //ORDENA DE MENOR A MAYOR PARTIDA
+            ordenarPorVictorias.setText("Orden por Victorias de + a -");
+            eliminarFilasModelo();
+            for(int i=0; i<cantFilas;i++){
+                modelo.addRow(datosReportes[i]);
+            }
+            ordenVictorias = 2;
+        }else{
+            //ORDENAR DE MAYOR A MENOR PARTIDA
+            ordenarPorVictorias.setText("Orden por Victorias de - a +");
+            eliminarFilasModelo();
+
+            for(int i=cantFilas-1; i>=0;i--){
+                modelo.addRow(datosReportes[i]);
+            }
+            ordenVictorias = 1;
+        }
+
+    }
+
+    public void ordenarFilasPorDerrota(){
+        int cantFilas = 0;
+
+        for(int i=0; i<datosReportes.length; i++){
+            if(datosReportes[i][0]!=null){
+                cantFilas++;
+            }else{
+                break;
+            }
+        }
+
+        String [] filaAux;
+        for(int i=0; i<cantFilas; i++){
+            for(int j=0; j<cantFilas-1; j++){
+                if(Integer.parseInt(datosReportes[j][3])>Integer.parseInt(datosReportes[j+1][3])){
+                    filaAux = datosReportes[j];
+                    datosReportes[j] = datosReportes[j+1];
+                    datosReportes[j+1] = filaAux;
+                }
+            }
+        }
+
+        //Orden por Derrotas de + a -
+        if(ordenDerrotas==1){
+            //ORDENA DE MENOR A MAYOR PARTIDA
+            ordenarPorDerrotas.setText("Orden por Derrotas de + a -");
+            eliminarFilasModelo();
+            for(int i=0; i<cantFilas;i++){
+                modelo.addRow(datosReportes[i]);
+            }
+            ordenDerrotas = 2;
+        }else{
+            //ORDENAR DE MAYOR A MENOR PARTIDA
+            ordenarPorDerrotas.setText("Orden por Derrotas de - a +");
+            eliminarFilasModelo();
+
+            for(int i=cantFilas-1; i>=0;i--){
+                modelo.addRow(datosReportes[i]);
+            }
+            ordenDerrotas = 1;
+        }
+    }
+
+    public void eliminarFilasModelo(){
+
+        int filas = modelo.getRowCount();
+        for(int i = filas - 1; i >=0; i--)
+        {
+            modelo.removeRow(i);
+        }
     }
 }

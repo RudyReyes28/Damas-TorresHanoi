@@ -71,11 +71,11 @@ public class VentanaListadoRDamas extends JDialog {
         aniadirReportes();
 
         tablaReportes = new JTable(modelo);
-        tablaReportes.setBounds(50,60,400,350);
+        tablaReportes.setBounds(50,60,400,300);
         panel.add(tablaReportes);
 
         JScrollPane scroll = new JScrollPane(tablaReportes,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scroll.setBounds(50,60,400,350);
+        scroll.setBounds(50,60,400,300);
         panel.add(scroll);
     }
 

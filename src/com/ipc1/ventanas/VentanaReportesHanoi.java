@@ -16,6 +16,8 @@ public class VentanaReportesHanoi extends JFrame {
     private DefaultTableModel modelo;
     private JPanel panel;
     private JButton regresarInicio, reintentar;
+    private JButton ordenarPorVictorias, ordenarPorDerrotas;
+    private int ordenVictorias = 1, ordenDerrotas = 1;
     private String [][] datosReportes;
     private JLabel masGanado, masPerdido;
     private VentanaHanoi ventanaHanoi;
@@ -122,6 +124,20 @@ public class VentanaReportesHanoi extends JFrame {
         reintentar.setHorizontalAlignment(SwingConstants.CENTER);
         reintentar.setFont(new Font("Arial",Font.BOLD,15));
         panel.add(reintentar);
+
+        ordenarPorVictorias = new JButton();
+        ordenarPorVictorias.setBounds(50,410,200,30);
+        ordenarPorVictorias.setText("Orden part. Ganadas de - a +");
+        ordenarPorVictorias.setHorizontalAlignment(SwingConstants.CENTER);
+        ordenarPorVictorias.setFont(new Font("Arial",Font.BOLD,12));
+        panel.add(ordenarPorVictorias);
+
+        ordenarPorDerrotas = new JButton();
+        ordenarPorDerrotas.setBounds(260,410,200,30);
+        ordenarPorDerrotas.setText("Orden part. Perdidas de - a +");
+        ordenarPorDerrotas.setHorizontalAlignment(SwingConstants.CENTER);
+        ordenarPorDerrotas.setFont(new Font("Arial",Font.BOLD,12));
+        panel.add(ordenarPorDerrotas);
     }
 
     public void aniadirReportes(){
@@ -236,18 +252,8 @@ public class VentanaReportesHanoi extends JFrame {
             }
         }
 
-        /*if(mejorJugador.equals(peorJugador)){
-            if(victorias>=derrotas){
-                masGanado.setText(mejorJugador);
-            }else{
-                masPerdido.setText(peorJugador);
-            }
-        }else{
-        */
-
             masGanado.setText(mejorJugador);
             masPerdido.setText(peorJugador);
-        //}
     }
 
     public void colocarEventos(){
@@ -269,7 +275,119 @@ public class VentanaReportesHanoi extends JFrame {
             }
         };
 
+        ActionListener eventoOrdenVictorias = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ordenarFilasPorVictorias();
+            }
+        };
+
+        ActionListener eventoOrdenDerrotas = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ordenarFilasPorDerrota();
+            }
+        };
+
         regresarInicio.addActionListener(eventoRegresar);
         reintentar.addActionListener(eventoReintentar);
+        ordenarPorVictorias.addActionListener(eventoOrdenVictorias);
+        ordenarPorDerrotas.addActionListener(eventoOrdenDerrotas);
+    }
+
+    public void ordenarFilasPorVictorias(){
+        int cantFilas = 0;
+
+        for(int i=0; i<datosReportes.length; i++){
+            if(datosReportes[i][0]!=null){
+                cantFilas++;
+            }else{
+                break;
+            }
+        }
+
+        String [] filaAux;
+        for(int i=0; i<cantFilas; i++){
+            for(int j=0; j<cantFilas-1; j++){
+                if(Integer.parseInt(datosReportes[j][1])>Integer.parseInt(datosReportes[j+1][1])){
+                    filaAux = datosReportes[j];
+                    datosReportes[j] = datosReportes[j+1];
+                    datosReportes[j+1] = filaAux;
+                }
+            }
+        }
+
+        //Orden por Victorias de + a -
+        if(ordenVictorias==1){
+            //ORDENA DE MENOR A MAYOR PARTIDA
+            ordenarPorVictorias.setText("Orden part. Ganadas de + a -");
+            eliminarFilasModelo();
+            for(int i=0; i<cantFilas;i++){
+                modelo.addRow(datosReportes[i]);
+            }
+            ordenVictorias = 2;
+        }else{
+            //ORDENAR DE MAYOR A MENOR PARTIDA
+            ordenarPorVictorias.setText("Orden part. Ganadas de - a +");
+            eliminarFilasModelo();
+
+            for(int i=cantFilas-1; i>=0;i--){
+                modelo.addRow(datosReportes[i]);
+            }
+            ordenVictorias = 1;
+        }
+
+    }
+
+    public void ordenarFilasPorDerrota(){
+        int cantFilas = 0;
+
+        for(int i=0; i<datosReportes.length; i++){
+            if(datosReportes[i][0]!=null){
+                cantFilas++;
+            }else{
+                break;
+            }
+        }
+
+        String [] filaAux;
+        for(int i=0; i<cantFilas; i++){
+            for(int j=0; j<cantFilas-1; j++){
+                if(Integer.parseInt(datosReportes[j][2])>Integer.parseInt(datosReportes[j+1][2])){
+                    filaAux = datosReportes[j];
+                    datosReportes[j] = datosReportes[j+1];
+                    datosReportes[j+1] = filaAux;
+                }
+            }
+        }
+
+        //Orden por Derrotas de + a -
+        if(ordenDerrotas==1){
+            //ORDENA DE MENOR A MAYOR PARTIDA
+            ordenarPorDerrotas.setText("Orden part. Perdidas de + a -");
+            eliminarFilasModelo();
+            for(int i=0; i<cantFilas;i++){
+                modelo.addRow(datosReportes[i]);
+            }
+            ordenDerrotas = 2;
+        }else{
+            //ORDENAR DE MAYOR A MENOR PARTIDA
+            ordenarPorDerrotas.setText("Orden part. Perdidas de - a +");
+            eliminarFilasModelo();
+
+            for(int i=cantFilas-1; i>=0;i--){
+                modelo.addRow(datosReportes[i]);
+            }
+            ordenDerrotas = 1;
+        }
+    }
+
+    public void eliminarFilasModelo(){
+
+        int filas = modelo.getRowCount();
+        for(int i = filas - 1; i >=0; i--)
+        {
+            modelo.removeRow(i);
+        }
     }
 }

@@ -48,18 +48,17 @@ public class VentanaInicio extends JFrame {
 
     public void agregarEtiquetas(){
         tituloDamas = new JLabel();
-        tituloDamas.setBounds(70, 170,350,40);
-        tituloDamas.setText("¡JUGAR DAMAS!");
-        tituloDamas.setHorizontalAlignment(SwingConstants.CENTER);
-        tituloDamas.setForeground(Color.BLUE);
-        tituloDamas.setFont(new Font("Impact",Font.BOLD,30));
+        tituloDamas.setBounds(70, 170,350,70);
+
+        final ImageIcon imagenFondoDamas = new ImageIcon(getClass().getResource("/imagenesVentana/jugarDamas.png"));
+        tituloDamas.setIcon(new ImageIcon(imagenFondoDamas.getImage().getScaledInstance(350, 70, Image.SCALE_SMOOTH)));
 
         tituloHanoi = new JLabel();
-        tituloHanoi.setBounds(500, 170,470,40);
-        tituloHanoi.setText("¡JUGAR TORRES DE HANOI!");
-        tituloHanoi.setHorizontalAlignment(SwingConstants.CENTER);
-        tituloHanoi.setForeground(Color.BLUE);
-        tituloHanoi.setFont(new Font("Impact",Font.BOLD,30));
+        tituloHanoi.setBounds(500, 170,475,70);
+
+        final ImageIcon imagenFondoHanoi = new ImageIcon(getClass().getResource("/imagenesVentana/jugarHanoi.png"));
+        tituloHanoi.setIcon(new ImageIcon(imagenFondoHanoi.getImage().getScaledInstance(475, 70, Image.SCALE_SMOOTH)));
+
 
         panelVentana.add(tituloDamas,Integer.valueOf(1));
         panelVentana.add(tituloHanoi,Integer.valueOf(1));
