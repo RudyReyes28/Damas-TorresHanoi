@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Proyecto 2 IPC1 2022:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Proyecto_2_IPC1_2022_jar</output-path>
+    <root id="archive" name="Proyecto 2 IPC1 2022.jar">
+      <element id="module-output" name="Proyecto 2 IPC1 2022" />
+    </root>
+  </artifact>
+</component>

@@ -17,7 +17,11 @@ public class MoverBloqueIndividual implements Runnable{
         int [][] solucion = ventanaHanoi.getTorresHanoi().getVerBloques().getSolucion();
         int posicionTemporal = posicionFinal;
         if(retrocederAvanzar>0) {
-            for (int i = posicionTemporal; i < posicionTemporal+retrocederAvanzar; i++) {
+            int pFinal = posicionTemporal+retrocederAvanzar;
+            if(pFinal>= solucion.length){
+                pFinal =solucion.length;
+            }
+            for (int i = posicionTemporal; i < pFinal; i++) {
                 //System.out.println(i+"Torre incial: "+solucion[i][0]+" torre final: "+solucion[i][1]);
                 if(ventanaHanoi.getTorresHanoi().getVerBloques().moverBloque(solucion[i][0], solucion[i][1])){
                     try {
